@@ -160,3 +160,4 @@ Menunya otomatis muncul untuk role yang berhak.
 - Watcher Vite memakai polling (lihat komentar di `vite.config.ts`) karena kuota inotify mesin
   dev sering habis. Setelah menaikkan limit kernel, jalankan `VITE_USE_POLLING=false npm run dev`.
 # gingko
+# perkasa
