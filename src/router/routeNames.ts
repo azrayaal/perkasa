@@ -1,5 +1,5 @@
 /**
- * Konstanta nama route — dipakai router, sidebar, dan navigasi programatik
+ * Konstanta nama route | dipakai router, sidebar, dan navigasi programatik
  * supaya tidak ada magic string yang tersebar.
  */
 export const ROUTE = {

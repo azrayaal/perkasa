@@ -2,7 +2,7 @@
 /**
  * Judul halaman standar (H1 36px, tracking -0.01em) + deskripsi.
  * Dipakai seluruh view supaya hierarki tipografi tidak ditulis ulang di tiap
- * halaman — mengubah skala judul cukup di sini.
+ * halaman | mengubah skala judul cukup di sini.
  */
 defineProps<{
   title: string

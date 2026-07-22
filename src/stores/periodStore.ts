@@ -31,7 +31,7 @@ function readStored(): StoredPeriod {
 }
 
 /**
- * Periode akuntansi aktif — SATU pilihan untuk seluruh aplikasi.
+ * Periode akuntansi aktif | SATU pilihan untuk seluruh aplikasi.
  *
  * Dashboard, performa, beban, pajak, pembukuan, neraca, dan laporan keuangan
  * semuanya membaca rentang tanggal dari sini. Mengganti bulan di topbar

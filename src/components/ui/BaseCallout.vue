@@ -11,7 +11,7 @@ withDefaults(defineProps<{ tone?: CalloutTone; title?: string }>(), { tone: 'not
  * dengan warna yang sama. Config-driven, tidak ada if-else warna di template.
  */
 /**
- * Lime dipakai sebagai garis & latar tipis, tapi TIDAK sebagai warna teks —
+ * Lime dipakai sebagai garis & latar tipis, tapi TIDAK sebagai warna teks |
  * lime di atas putih tidak terbaca, jadi teksnya memakai tinta gelap.
  */
 const TONE_CLASS: Record<CalloutTone, string> = {

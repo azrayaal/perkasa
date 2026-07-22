@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * Lambang Perkasa: profil baja "H" (simbol usaha material konstruksi) di dalam
- * perisai. Digambar sebagai SVG inline — tidak ada file gambar yang perlu
+ * perisai. Digambar sebagai SVG inline | tidak ada file gambar yang perlu
  * dimuat, dan warnanya otomatis ikut token tema.
  */
 withDefaults(defineProps<{ size?: number }>(), { size: 40 })

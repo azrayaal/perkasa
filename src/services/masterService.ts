@@ -1,7 +1,7 @@
 /**
  * Master data: pelanggan, pemasok, produk, gudang, dan bagan akun.
  *
- * Master inilah yang membuat modul saling mengunci — satu `productId` yang sama
+ * Master inilah yang membuat modul saling mengunci | satu `productId` yang sama
  * dipakai faktur penjualan, faktur pembelian, dan kartu stok, sehingga laporan
  * per produk tidak perlu pencocokan nama.
  */
@@ -14,27 +14,27 @@ import { buildPurchaseRows } from '@/services/purchaseService'
 import { buildSalesRows } from '@/services/salesService'
 import type { Account, CompanyProfile, Customer, Product, Supplier, Warehouse } from '@/types'
 
-/** TODO: replace with real API call — GET /master/customers */
+/** TODO: replace with real API call | GET /master/customers */
 export function getCustomers(): Promise<Customer[]> {
   return respond(db().customers)
 }
 
-/** TODO: replace with real API call — GET /master/suppliers */
+/** TODO: replace with real API call | GET /master/suppliers */
 export function getSuppliers(): Promise<Supplier[]> {
   return respond(db().suppliers)
 }
 
-/** TODO: replace with real API call — GET /master/products */
+/** TODO: replace with real API call | GET /master/products */
 export function getProducts(): Promise<Product[]> {
   return respond(db().products)
 }
 
-/** TODO: replace with real API call — GET /master/warehouses */
+/** TODO: replace with real API call | GET /master/warehouses */
 export function getWarehouses(): Promise<Warehouse[]> {
   return respond(db().warehouses)
 }
 
-/** TODO: replace with real API call — GET /master/accounts */
+/** TODO: replace with real API call | GET /master/accounts */
 export function getChartOfAccounts(): Promise<Account[]> {
   return respond(CHART_OF_ACCOUNTS)
 }
@@ -43,7 +43,7 @@ export function getCompanyProfile(): Promise<CompanyProfile> {
   return respond(db().company)
 }
 
-/** Pelanggan beserta rekam jejak transaksinya — kolom tambahan di tabel master. */
+/** Pelanggan beserta rekam jejak transaksinya | kolom tambahan di tabel master. */
 export interface CustomerRow {
   customer: Customer
   invoiceCount: number
@@ -53,7 +53,7 @@ export interface CustomerRow {
   creditUsage: number
 }
 
-/** TODO: replace with real API call — GET /master/customers?withStats=1 */
+/** TODO: replace with real API call | GET /master/customers?withStats=1 */
 export function getCustomerRows(): Promise<CustomerRow[]> {
   const rows = buildSalesRows()
 
@@ -81,7 +81,7 @@ export interface SupplierRow {
   outstanding: number
 }
 
-/** TODO: replace with real API call — GET /master/suppliers?withStats=1 */
+/** TODO: replace with real API call | GET /master/suppliers?withStats=1 */
 export function getSupplierRows(): Promise<SupplierRow[]> {
   const rows = buildPurchaseRows()
 
@@ -106,7 +106,7 @@ export interface ProductRow {
   marginPercent: number
 }
 
-/** TODO: replace with real API call — GET /master/products?withStock=1 */
+/** TODO: replace with real API call | GET /master/products?withStock=1 */
 export function getProductRows(): Promise<ProductRow[]> {
   return respond(
     buildPositions(today()).map((position) => ({

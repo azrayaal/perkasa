@@ -1,5 +1,5 @@
 /**
- * Seed data PT Perkasa Baja Nusantara — distributor material konstruksi.
+ * Seed data PT Perkasa Gemilang Distrindo | distributor material konstruksi.
  *
  * Transaksi TIDAK ditulis satu per satu, melainkan disimulasikan hari demi hari
  * dari 1 Januari 2026 sampai 22 Juli 2026:
@@ -14,7 +14,7 @@
  * saldo Piutang Usaha, dan seterusnya. Generator memakai PRNG bersemai tetap,
  * jadi setiap orang yang membuka aplikasi ini melihat angka yang sama persis.
  *
- * TODO: hapus file ini saat backend siap — `services/` akan menarik data asli.
+ * TODO: hapus file ini saat backend siap | `services/` akan menarik data asli.
  */
 import { ACC } from '@/data/chartOfAccounts'
 import { addDays, isWeekend, periodOf } from '@/utils/date'
@@ -47,7 +47,7 @@ import type {
 export const TODAY: IsoDate = '2026-07-22'
 export const FISCAL_YEAR = 2026
 export const YEAR_START: IsoDate = '2026-01-01'
-/** Tanggal saldo awal — sehari sebelum tahun buku dimulai. */
+/** Tanggal saldo awal | sehari sebelum tahun buku dimulai. */
 export const OPENING_DATE: IsoDate = '2025-12-31'
 
 const VAT_RATE = 11
@@ -58,12 +58,12 @@ const VAT_RATE = 11
 
 export const company: CompanyProfile = {
   name: 'Perkasa ERP',
-  legalName: 'PT Perkasa Baja Nusantara',
+  legalName: 'PT Perkasa Gemilang Distrindo',
   npwp: '01.234.567.8-407.000',
   address: 'Kawasan Industri Jababeka II, Jl. Industri Selatan Blok GG No. 12',
   city: 'Bekasi, Jawa Barat',
   phone: '(021) 8983 4400',
-  email: 'keuangan@perkasabaja.co.id',
+  email: 'keuangan@perkasagemilang.co.id',
   fiscalYear: FISCAL_YEAR,
   vatRate: VAT_RATE,
   corporateTaxRate: 22,
@@ -73,7 +73,7 @@ export const authAccounts: AuthAccount[] = [
   {
     id: 'USR-01',
     name: 'Hendra Wijaya',
-    email: 'direksi@perkasabaja.co.id',
+    email: 'direksi@perkasagemilang.co.id',
     password: 'perkasa123',
     role: 'direksi',
     title: 'Direktur Utama',
@@ -81,7 +81,7 @@ export const authAccounts: AuthAccount[] = [
   {
     id: 'USR-02',
     name: 'Ratna Kusuma',
-    email: 'akuntan@perkasabaja.co.id',
+    email: 'akuntan@perkasagemilang.co.id',
     password: 'perkasa123',
     role: 'akuntan',
     title: 'Manajer Keuangan & Pajak',
@@ -89,7 +89,7 @@ export const authAccounts: AuthAccount[] = [
   {
     id: 'USR-03',
     name: 'Bayu Saputra',
-    email: 'operasional@perkasabaja.co.id',
+    email: 'operasional@perkasagemilang.co.id',
     password: 'perkasa123',
     role: 'operasional',
     title: 'Supervisor Penjualan & Gudang',
@@ -110,11 +110,13 @@ export const customers: Customer[] = [
   { id: 'CUS-01', code: 'PLG-001', name: 'PT Griya Karya Mandiri', npwp: '02.111.222.3-407.000', city: 'Bekasi', contact: 'Yusuf Maulana', phone: '0811-1900-221', paymentTermDays: 30, creditLimit: 900_000_000, status: 'active' },
   { id: 'CUS-02', code: 'PLG-002', name: 'CV Bangun Sejahtera Abadi', npwp: '02.333.444.5-407.000', city: 'Karawang', contact: 'Siti Rahmawati', phone: '0812-8877-110', paymentTermDays: 30, creditLimit: 650_000_000, status: 'active' },
   { id: 'CUS-03', code: 'PLG-003', name: 'PT Nusa Konstruksi Perkasa', npwp: '02.555.666.7-054.000', city: 'Jakarta Timur', contact: 'Bambang Hartono', phone: '0813-2211-908', paymentTermDays: 45, creditLimit: 1_200_000_000, status: 'active' },
-  { id: 'CUS-04', code: 'PLG-004', name: 'Toko Material Jaya Abadi', npwp: '—', city: 'Bekasi', contact: 'Hendrik Tanujaya', phone: '0815-6677-441', paymentTermDays: 14, creditLimit: 250_000_000, status: 'active' },
+  { id: 'CUS-04', code: 'PLG-004', name: 'Toko Material Jaya Abadi', npwp: '|', city: 'Bekasi', contact: 'Hendrik Tanujaya', phone: '0815-6677-441', paymentTermDays: 14, creditLimit: 250_000_000, status: 'active' },
   { id: 'CUS-05', code: 'PLG-005', name: 'PT Wijaya Property Group', npwp: '02.777.888.9-411.000', city: 'Tangerang', contact: 'Lina Kurniawati', phone: '0816-4433-227', paymentTermDays: 45, creditLimit: 1_000_000_000, status: 'active' },
   { id: 'CUS-06', code: 'PLG-006', name: 'CV Anugerah Beton Sentosa', npwp: '02.999.111.2-407.000', city: 'Cikarang', contact: 'Rizal Fahmi', phone: '0817-9090-334', paymentTermDays: 30, creditLimit: 500_000_000, status: 'active' },
-  { id: 'CUS-07', code: 'PLG-007', name: 'Toko Bangunan Sinar Terang', npwp: '—', city: 'Depok', contact: 'Mega Puspita', phone: '0818-5544-102', paymentTermDays: 14, creditLimit: 180_000_000, status: 'active' },
+  { id: 'CUS-07', code: 'PLG-007', name: 'Toko Bangunan Sinar Terang', npwp: '|', city: 'Depok', contact: 'Mega Puspita', phone: '0818-5544-102', paymentTermDays: 14, creditLimit: 180_000_000, status: 'active' },
   { id: 'CUS-08', code: 'PLG-008', name: 'PT Karya Bumi Selaras', npwp: '02.121.343.5-054.000', city: 'Jakarta Selatan', contact: 'Andre Firmansyah', phone: '0819-3322-778', paymentTermDays: 45, creditLimit: 800_000_000, status: 'inactive' },
+  // Pembeli barang bekas hasil tukar tambah; membayar cepat dan tunai.
+  { id: 'CUS-09', code: 'PLG-009', name: 'PT Logam Jaya Peleburan', npwp: '02.454.676.8-433.000', city: 'Cikande, Serang', contact: 'Surya Wijanarko', phone: '0254-771-330', paymentTermDays: 7, creditLimit: 400_000_000, status: 'active' },
 ]
 
 export const suppliers: Supplier[] = [
@@ -123,7 +125,7 @@ export const suppliers: Supplier[] = [
   { id: 'SUP-03', code: 'PMS-003', name: 'PT Baja Ringan Indoprima', npwp: '03.333.777.9-407.000', city: 'Bekasi', contact: 'Doni Prasetyo', phone: '021-8871-559', paymentTermDays: 21, status: 'active' },
   { id: 'SUP-04', code: 'PMS-004', name: 'PT Cipta Kimia Warna', npwp: '03.444.888.1-411.000', city: 'Tangerang', contact: 'Ira Susanti', phone: '021-5590-338', paymentTermDays: 30, status: 'active' },
   { id: 'SUP-05', code: 'PMS-005', name: 'CV Sumber Panel & Pipa', npwp: '03.555.999.2-407.000', city: 'Bekasi', contact: 'Teguh Santoso', phone: '021-8842-107', paymentTermDays: 21, status: 'active' },
-  { id: 'SUP-06', code: 'PMS-006', name: 'CV Agregat Mandiri Jaya', npwp: '—', city: 'Karawang', contact: 'Sukarno Adi', phone: '0267-441-909', paymentTermDays: 14, status: 'active' },
+  { id: 'SUP-06', code: 'PMS-006', name: 'CV Agregat Mandiri Jaya', npwp: '|', city: 'Karawang', contact: 'Sukarno Adi', phone: '0267-441-909', paymentTermDays: 14, status: 'active' },
 ]
 
 /**
@@ -138,6 +140,11 @@ interface ProductSeed extends Product {
   lot: number
   /** Produk yang sengaja dibiarkan menipis, supaya alert stok punya isi. */
   slowRestock?: boolean
+  /**
+   * Barang bekas: tidak ikut simulasi penjualan reguler maupun pemesanan ulang.
+   * Masuk gudang hanya lewat tukar tambah.
+   */
+  tradeInOnly?: boolean
 }
 
 const PRODUCT_SEEDS: ProductSeed[] = [
@@ -155,18 +162,40 @@ const PRODUCT_SEEDS: ProductSeed[] = [
   { id: 'PRD-12', sku: 'PVC-4IN', name: 'Pipa PVC 4" AW', category: 'Finishing', unit: 'batang', cost: 92_000, price: 119_000, minStock: 220, status: 'active', supplierId: 'SUP-05', demand: 450, lot: 10 },
   { id: 'PRD-13', sku: 'CAT-T25', name: 'Cat Tembok Interior 25kg', category: 'Finishing', unit: 'pail', cost: 363_000, price: 468_000, minStock: 80, status: 'active', supplierId: 'SUP-04', demand: 160, lot: 5, slowRestock: true },
   { id: 'PRD-14', sku: 'KRM-4040', name: 'Keramik Lantai 40×40', category: 'Finishing', unit: 'dus', cost: 66_000, price: 85_000, minStock: 450, status: 'active', supplierId: 'SUP-04', demand: 900, lot: 25, slowRestock: true },
+
+  /*
+   * Barang bekas hasil tukar tambah. Stok awalnya nol dan tidak pernah dipesan
+   * ke pemasok | satu-satunya pintu masuknya adalah tukar tambah dari
+   * pelanggan, lalu dijual ke peleburan.
+   */
+  { id: 'PRD-15', sku: 'SCR-BSI', name: 'Besi Beton Bekas', category: 'Barang Bekas', unit: 'kg', cost: 8_500, price: 11_000, minStock: 0, status: 'active', supplierId: 'SUP-01', demand: 0, lot: 10, tradeInOnly: true },
+  { id: 'PRD-16', sku: 'SCR-BJR', name: 'Baja Ringan & Hollow Bekas', category: 'Barang Bekas', unit: 'kg', cost: 9_000, price: 12_000, minStock: 0, status: 'active', supplierId: 'SUP-03', demand: 0, lot: 10, tradeInOnly: true },
+  { id: 'PRD-17', sku: 'SCR-CMP', name: 'Scrap Besi Campur', category: 'Barang Bekas', unit: 'kg', cost: 6_500, price: 8_500, minStock: 0, status: 'active', supplierId: 'SUP-01', demand: 0, lot: 10, tradeInOnly: true },
 ]
 
-/** Master produk yang dilihat aplikasi — parameter simulasi tidak ikut bocor. */
+/** SKU barang bekas | dipakai simulasi tukar tambah dan penjualan scrap. */
+const SCRAP_SEEDS = PRODUCT_SEEDS.filter((seed) => seed.tradeInOnly === true)
+
+/** SKU dagang reguler: punya stok awal, dipesan ke pemasok, dan dijual rutin. */
+const REGULAR_SEEDS = PRODUCT_SEEDS.filter((seed) => seed.tradeInOnly !== true)
+
+/** Master produk yang dilihat aplikasi | parameter simulasi tidak ikut bocor. */
 export const products: Product[] = PRODUCT_SEEDS.map(
-  ({ supplierId: _supplierId, demand: _demand, lot: _lot, slowRestock: _slow, ...product }) => product,
+  ({
+    supplierId: _supplierId,
+    demand: _demand,
+    lot: _lot,
+    slowRestock: _slow,
+    tradeInOnly: _tradeInOnly,
+    ...product
+  }) => product,
 )
 
 /* -------------------------------------------------------------------------- */
 /* Utilitas simulasi                                                           */
 /* -------------------------------------------------------------------------- */
 
-/** PRNG deterministik (mulberry32) — semai tetap = data selalu identik. */
+/** PRNG deterministik (mulberry32) | semai tetap = data selalu identik. */
 function createRandom(seed: number): () => number {
   let state = seed >>> 0
   return () => {
@@ -200,7 +229,7 @@ function taxInvoiceNumber(sequence: number): string {
   return `010.005-26.${String(10_000_000 + sequence * 137).padStart(8, '0')}`
 }
 
-/** Pelanggan besar muncul lebih sering — distribusi penjualan jadi realistis. */
+/** Pelanggan besar muncul lebih sering | distribusi penjualan jadi realistis. */
 const CUSTOMER_WEIGHTS: Array<[string, number]> = [
   ['CUS-03', 22],
   ['CUS-01', 19],
@@ -243,17 +272,18 @@ function stockKey(productId: string, warehouseId: string): string {
   return `${productId}|${warehouseId}`
 }
 
-/** Porsi stok tiap gudang — pusat menyimpan paling banyak. */
+/** Porsi stok tiap gudang | pusat menyimpan paling banyak. */
 const WAREHOUSE_SHARE: Record<string, number> = { 'WH-01': 0.45, 'WH-02': 0.32, 'WH-03': 0.23 }
 
 export function generateSeed(): SeedData {
   const stock = new Map<string, number>()
   const openingStockMoves: StockMove[] = []
 
-  // Stok awal ≈ 2,2 bulan permintaan, dipecah sesuai porsi gudang.
-  for (const seed of PRODUCT_SEEDS) {
+  // Stok awal ≈ 2,6 bulan permintaan, dipecah sesuai porsi gudang.
+  // Barang bekas tidak punya stok awal | ia hanya lahir dari tukar tambah.
+  for (const seed of REGULAR_SEEDS) {
     for (const warehouse of warehouses) {
-      const qty = roundTo(seed.demand * 2.2 * WAREHOUSE_SHARE[warehouse.id], seed.lot)
+      const qty = roundTo(seed.demand * 2.6 * WAREHOUSE_SHARE[warehouse.id], seed.lot)
       stock.set(stockKey(seed.id, warehouse.id), qty)
       openingStockMoves.push({
         id: `SM-OPN-${seed.id}-${warehouse.id}`,
@@ -299,18 +329,19 @@ export function generateSeed(): SeedData {
     let cogs = 0
 
     for (let index = 0; index < lineCount; index += 1) {
-      const seed = pick(PRODUCT_SEEDS)
+      const seed = pick(REGULAR_SEEDS)
       if (chosen.has(seed.id)) continue
       chosen.add(seed.id)
 
       const available = stock.get(stockKey(seed.id, warehouse.id)) ?? 0
-      // Rata-rata satu produk terjual 3× per bulan, jadi tiap faktur mengambil
-      // sekitar sepertiga permintaan bulanan.
-      const wanted = roundTo((seed.demand / 3) * between(0.6, 1.4), seed.lot)
+      // Satu produk muncul di sekitar 3,5 faktur per bulan, jadi tiap baris
+      // mengambil kira-kira seperempat permintaan bulanannya. Angka pembagi ini
+      // yang menjaga total penjualan setahun tetap masuk akal.
+      const wanted = roundTo((seed.demand / 3.6) * between(0.6, 1.4), seed.lot)
       const qty = Math.min(wanted, roundTo(available * 0.8, seed.lot))
       if (qty < seed.lot || qty > available) continue
 
-      // Diskon hanya untuk order besar — pelanggan termin panjang menawar lebih.
+      // Diskon hanya untuk order besar | pelanggan termin panjang menawar lebih.
       const discountPercent =
         qty > seed.demand / 2 && random() < 0.45 ? Number(between(1, 5).toFixed(1)) : 0
 
@@ -327,10 +358,46 @@ export function generateSeed(): SeedData {
     const isDraft = date > addDays(TODAY, -9) && random() < 0.35
 
     if (isDraft) {
-      // Draft belum menggerakkan buku — kembalikan stok yang tadi dipotong.
+      // Draft belum menggerakkan buku | kembalikan stok yang tadi dipotong.
       for (const line of lines) {
         const key = stockKey(line.productId, warehouse.id)
         stock.set(key, (stock.get(key) ?? 0) + line.qty)
+      }
+    }
+
+    /*
+     * Tukar tambah: sebagian kontraktor menyerahkan besi bekas sisa proyek
+     * sebagai potongan pembayaran. Hanya order besar yang non-draft, karena
+     * barangnya benar-benar diangkut ke gudang saat serah terima.
+     */
+    let tradeIn: SalesInvoice['tradeIn'] = null
+
+    if (!isDraft && totals.total > 60_000_000 && random() < 0.14) {
+      const seed = pick(SCRAP_SEEDS)
+      // Harga tebus ditawar di sekitar harga pokok standar | selisihnya nanti
+      // muncul sebagai untung/rugi penilaian di akun 5300.
+      const unitValue = roundTo(seed.cost * between(0.88, 1.22), 100)
+      const targetValue = totals.total * between(0.05, 0.14)
+      const qty = roundTo(targetValue / unitValue, seed.lot)
+
+      const dpp = qty * unitValue
+      // Hanya pelanggan ber-NPWP yang bisa menerbitkan faktur pajak atas
+      // penyerahan barang bekasnya.
+      const vatable = customer.npwp !== '|'
+      const ppn = vatable ? Math.round((dpp * VAT_RATE) / 100) : 0
+
+      if (qty >= seed.lot && dpp + ppn < totals.total) {
+        tradeIn = {
+          lines: [{ productId: seed.id, qty, unitValue }],
+          warehouseId: warehouse.id,
+          dpp,
+          ppn,
+          total: dpp + ppn,
+          taxInvoiceNumber: vatable ? taxInvoiceNumber(900 + salesSeq) : null,
+        }
+
+        const key = stockKey(seed.id, warehouse.id)
+        stock.set(key, (stock.get(key) ?? 0) + qty)
       }
     }
 
@@ -344,72 +411,120 @@ export function generateSeed(): SeedData {
       lines,
       totals,
       cogs,
+      tradeIn,
       paidAmount: 0,
       status: isDraft ? 'draft' : 'posted',
       // Faktur pajak biasanya terbit belakangan; yang terbaru sengaja kosong.
-      taxInvoiceNumber: isDraft || date > addDays(TODAY, -12) ? null : taxInvoiceNumber(salesSeq),
+      taxInvoiceNumber: isDraft || date > addDays(TODAY, -26) ? null : taxInvoiceNumber(salesSeq),
       salesPerson: pick(SALES_PEOPLE),
+      notes: tradeIn ? 'Disertai tukar tambah besi bekas dari pelanggan' : undefined,
+    })
+  }
+
+  /**
+   * Penjualan barang bekas ke peleburan | penutup siklus tukar tambah:
+   * masuk lewat pelanggan, keluar sebagai pendapatan.
+   */
+  function createScrapSaleInvoice(date: IsoDate): void {
+    const customer = customers.find((row) => row.id === 'CUS-09')!
+    const warehouse = warehouses[0]
+
+    const lines: DocumentLine[] = []
+    let cogs = 0
+
+    for (const seed of SCRAP_SEEDS) {
+      const available = stock.get(stockKey(seed.id, warehouse.id)) ?? 0
+      // Sisakan sebagian supaya gudang tidak pernah kosong melompong.
+      const qty = roundTo(available * 0.75, seed.lot)
+      if (qty < seed.lot || qty > available) continue
+
+      lines.push({ productId: seed.id, qty, unitPrice: seed.price, discountPercent: 0 })
+      cogs += qty * seed.cost
+      stock.set(stockKey(seed.id, warehouse.id), available - qty)
+    }
+
+    if (lines.length === 0) return
+
+    salesSeq += 1
+    salesInvoices.push({
+      id: `SLS-${String(salesSeq).padStart(4, '0')}`,
+      number: docNumber('INV', salesSeq),
+      date,
+      dueDate: addDays(date, customer.paymentTermDays),
+      customerId: customer.id,
+      warehouseId: warehouse.id,
+      lines,
+      totals: calcTotals(lines, VAT_RATE),
+      cogs,
+      tradeIn: null,
+      paidAmount: 0,
+      status: 'posted',
+      taxInvoiceNumber: taxInvoiceNumber(salesSeq),
+      salesPerson: 'Bayu Saputra',
+      notes: 'Penjualan besi bekas hasil tukar tambah ke peleburan',
     })
   }
 
   /* ---------------------------------------------------------------------- */
-  /* Pembelian — dipicu stok yang menipis                                    */
+  /* Pembelian | dipicu stok yang menipis                                    */
   /* ---------------------------------------------------------------------- */
 
   function replenish(date: IsoDate): void {
-    // Gudang dengan stok paling menipis yang diisi lebih dulu.
-    const target = [...warehouses].sort((a, b) => {
-      const totalA = PRODUCT_SEEDS.reduce((sum, seed) => sum + (stock.get(stockKey(seed.id, a.id)) ?? 0) / seed.demand, 0)
-      const totalB = PRODUCT_SEEDS.reduce((sum, seed) => sum + (stock.get(stockKey(seed.id, b.id)) ?? 0) / seed.demand, 0)
-      return totalA - totalB
-    })[0]
+    // Titik pesan ulang dihitung PER GUDANG, bukan agregat nasional. Kalau
+    // dihitung agregat, satu gudang bisa kosong sementara total nasional
+    // terlihat aman | dan penjualan di gudang itu jadi tertahan tanpa sebab.
+    for (const warehouse of warehouses) {
+      const share = WAREHOUSE_SHARE[warehouse.id]
 
-    const needed = PRODUCT_SEEDS.filter((seed) => {
-      const onHand = warehouses.reduce((sum, wh) => sum + (stock.get(stockKey(seed.id, wh.id)) ?? 0), 0)
-      // Dua produk sengaja lambat di-restock pada kuartal III supaya modul
-      // gudang punya peringatan stok menipis yang nyata.
-      const threshold = seed.slowRestock && date > '2026-06-05' ? seed.demand * 0.35 : seed.demand * 1.05
-      return onHand < threshold
-    })
+      const needed = REGULAR_SEEDS.filter((seed) => {
+        // Dua produk sengaja berhenti dipesan sejak awal Juni | pemasoknya
+        // bermasalah | supaya peringatan stok menipis di modul Gudang punya
+        // kasus nyata, bukan sekadar kolom kosong.
+        if (seed.slowRestock && date > '2026-06-05') return false
 
-    if (needed.length === 0) return
+        const onHand = stock.get(stockKey(seed.id, warehouse.id)) ?? 0
+        return onHand < seed.demand * share * 1.2
+      })
 
-    const bySupplier = new Map<string, ProductSeed[]>()
-    for (const seed of needed) {
-      const list = bySupplier.get(seed.supplierId) ?? []
-      list.push(seed)
-      bySupplier.set(seed.supplierId, list)
-    }
+      if (needed.length === 0) continue
 
-    for (const [supplierId, seeds] of bySupplier) {
-      const supplier = suppliers.find((row) => row.id === supplierId)!
-      const lines: DocumentLine[] = seeds.map((seed) => ({
-        productId: seed.id,
-        qty: roundTo(seed.demand * between(1.25, 1.75), seed.lot),
-        unitPrice: seed.cost,
-        discountPercent: 0,
-      }))
-
-      for (const line of lines) {
-        const key = stockKey(line.productId, target.id)
-        stock.set(key, (stock.get(key) ?? 0) + line.qty)
+      const bySupplier = new Map<string, ProductSeed[]>()
+      for (const seed of needed) {
+        const list = bySupplier.get(seed.supplierId) ?? []
+        list.push(seed)
+        bySupplier.set(seed.supplierId, list)
       }
 
-      purchaseSeq += 1
-      purchaseInvoices.push({
-        id: `PUR-${String(purchaseSeq).padStart(4, '0')}`,
-        number: docNumber('PUR', purchaseSeq),
-        date,
-        dueDate: addDays(date, supplier.paymentTermDays),
-        supplierId,
-        warehouseId: target.id,
-        lines,
-        totals: calcTotals(lines, VAT_RATE),
-        paidAmount: 0,
-        status: 'posted',
-        taxInvoiceNumber: supplier.npwp === '—' ? null : taxInvoiceNumber(500 + purchaseSeq),
-        notes: `Pengisian stok ${target.name}`,
-      })
+      for (const [supplierId, seeds] of bySupplier) {
+        const supplier = suppliers.find((row) => row.id === supplierId)!
+        const lines: DocumentLine[] = seeds.map((seed) => ({
+          productId: seed.id,
+          qty: roundTo(seed.demand * share * between(1.7, 2.3), seed.lot),
+          unitPrice: seed.cost,
+          discountPercent: 0,
+        }))
+
+        for (const line of lines) {
+          const key = stockKey(line.productId, warehouse.id)
+          stock.set(key, (stock.get(key) ?? 0) + line.qty)
+        }
+
+        purchaseSeq += 1
+        purchaseInvoices.push({
+          id: `PUR-${String(purchaseSeq).padStart(4, '0')}`,
+          number: docNumber('PUR', purchaseSeq),
+          date,
+          dueDate: addDays(date, supplier.paymentTermDays),
+          supplierId,
+          warehouseId: warehouse.id,
+          lines,
+          totals: calcTotals(lines, VAT_RATE),
+          paidAmount: 0,
+          status: 'posted',
+          taxInvoiceNumber: supplier.npwp === '|' ? null : taxInvoiceNumber(500 + purchaseSeq),
+          notes: `Pengisian stok ${warehouse.name}`,
+        })
+      }
     }
   }
 
@@ -430,11 +545,11 @@ export function generateSeed(): SeedData {
   }
 
   const EXPENSE_TEMPLATES: ExpenseTemplate[] = [
-    { day: 25, accountCode: '6100', description: 'Gaji, tunjangan & BPJS karyawan', vendor: 'Payroll internal', amount: () => 118_000_000, withholding: 'pph21', vatable: false, payFrom: ACC.bankPayroll },
-    { day: 5, accountCode: '6110', description: 'Sewa gudang & kantor bulanan', vendor: 'PT Jababeka Properti', amount: () => 25_000_000, withholding: 'pph4-2', vatable: false, payFrom: ACC.bankOps },
+    { day: 25, accountCode: '6100', description: 'Gaji, tunjangan & BPJS karyawan', vendor: 'Payroll internal', amount: () => 96_000_000, withholding: 'pph21', vatable: false, payFrom: ACC.bankPayroll },
+    { day: 5, accountCode: '6110', description: 'Sewa gudang & kantor bulanan', vendor: 'PT Jababeka Properti', amount: () => 22_000_000, withholding: 'pph4-2', vatable: false, payFrom: ACC.bankOps },
     { day: 12, accountCode: '6120', description: 'Listrik, air & internet', vendor: 'PLN, PDAM & Telkom', amount: () => roundTo(between(16_500_000, 20_000_000), 50_000), withholding: 'none', vatable: false, payFrom: ACC.bankOps },
-    { day: 18, accountCode: '6130', description: 'Sewa armada & ongkos kirim', vendor: 'CV Trans Logistik Utama', amount: () => roundTo(between(19_000_000, 26_000_000), 100_000), withholding: 'pph23', vatable: false, payFrom: ACC.bankOps },
-    { day: 20, accountCode: '6140', description: 'Promosi & pameran material', vendor: 'Kreasi Media Nusantara', amount: () => roundTo(between(4_500_000, 9_000_000), 100_000), withholding: 'pph23', vatable: true, payFrom: ACC.bankOps },
+    { day: 18, accountCode: '6130', description: 'Sewa armada & ongkos kirim', vendor: 'CV Trans Logistik Utama', amount: () => roundTo(between(15_000_000, 20_000_000), 100_000), withholding: 'pph23', vatable: false, payFrom: ACC.bankOps },
+    { day: 20, accountCode: '6140', description: 'Promosi & pameran material', vendor: 'Kreasi Media Nusantara', amount: () => roundTo(between(3_500_000, 7_000_000), 100_000), withholding: 'pph23', vatable: true, payFrom: ACC.bankOps },
     { day: 8, accountCode: '6150', description: 'Perlengkapan & ATK kantor', vendor: 'Toko Sinar Kantor', amount: () => roundTo(between(2_500_000, 4_500_000), 50_000), withholding: 'none', vatable: true, payFrom: ACC.cash },
     { day: 15, accountCode: '6160', description: 'Servis forklift & perbaikan gudang', vendor: 'CV Teknik Andalan', amount: () => roundTo(between(3_500_000, 7_500_000), 100_000), withholding: 'pph23', vatable: true, payFrom: ACC.bankOps },
     { day: 10, accountCode: '6170', description: 'Jasa konsultan pajak & audit', vendor: 'KAP Suryana & Rekan', amount: () => 7_500_000, withholding: 'pph23', vatable: true, payFrom: ACC.bankOps },
@@ -455,7 +570,7 @@ export function generateSeed(): SeedData {
     const amount = Math.round(template.amount())
     const ppn = template.vatable ? Math.round((amount * VAT_RATE) / 100) : 0
     const withholdingAmount = Math.round((amount * WITHHOLDING_RATE[template.withholding]) / 100)
-    // Beban paling akhir belum sempat dibayar — muncul sebagai utang di neraca.
+    // Beban paling akhir belum sempat dibayar | muncul sebagai utang di neraca.
     const unpaid = date > addDays(TODAY, -8)
 
     expenseSeq += 1
@@ -487,8 +602,13 @@ export function generateSeed(): SeedData {
     if (new Date(`${date}T00:00:00Z`).getUTCDay() === 1) replenish(date)
 
     if (!isWeekend(date)) {
-      if (random() < 0.62) createSalesInvoice(date)
-      if (random() < 0.18) createSalesInvoice(date)
+      if (random() < 0.58) createSalesInvoice(date)
+      if (random() < 0.22) createSalesInvoice(date)
+    }
+
+    // Scrap dikirim ke peleburan sekitar dua bulan sekali, setelah terkumpul.
+    if (dayOfMonth === 18 && [3, 5, 7].includes(Number(date.slice(5, 7)))) {
+      createScrapSaleInvoice(date)
     }
 
     for (const template of EXPENSE_TEMPLATES) {
@@ -508,7 +628,7 @@ export function generateSeed(): SeedData {
         productId: seed.id,
         warehouseId: warehouse.id,
         qtyDiff,
-        reason: 'Selisih stock opname triwulanan — susut & barang rusak',
+        reason: 'Selisih stock opname triwulanan | susut & barang rusak',
       })
       const key = stockKey(seed.id, warehouse.id)
       stock.set(key, (stock.get(key) ?? 0) + qtyDiff)
@@ -560,7 +680,7 @@ export function generateSeed(): SeedData {
         direction: 'in',
         invoiceId: invoice.id,
         amount: invoice.totals.total,
-        accountCode: random() < 0.85 ? ACC.bankOps : ACC.cash,
+        accountCode: ACC.bankOps,
         method: random() < 0.85 ? 'transfer' : 'tunai',
       })
     } else if (dice < 0.9) {
@@ -574,7 +694,7 @@ export function generateSeed(): SeedData {
         method: 'giro',
       })
     }
-    // Sisanya menunggak — sengaja dibiarkan untuk mengisi umur piutang.
+    // Sisanya menunggak | sengaja dibiarkan untuk mengisi umur piutang.
   }
 
   for (const invoice of purchaseInvoices) {
@@ -589,7 +709,7 @@ export function generateSeed(): SeedData {
       continue
     }
 
-    // Kewajiban ke pemasok hampir selalu dibayar tepat waktu — menjaga termin.
+    // Kewajiban ke pemasok hampir selalu dibayar tepat waktu | menjaga termin.
     if (dice < 0.9) {
       const paidDate = addDays(invoice.dueDate, Math.round(between(-4, 2)))
       draftPayments.push({
@@ -673,8 +793,27 @@ export function generateSeed(): SeedData {
 
   const DEPRECIATION_PER_MONTH = 21_000_000
   const INTEREST_PER_MONTH = 15_000_000
-  const CORPORATE_TAX_ACCRUAL = 19_000_000
-  const PPH25_INSTALMENT = 16_000_000
+  const CORPORATE_TAX_ACCRUAL = 26_000_000
+  const PPH25_INSTALMENT = 22_000_000
+  const LOAN_PRINCIPAL_PER_MONTH = 25_000_000
+
+  // Rekening payroll diisi dari rekening operasional sebelum tanggal gajian.
+  // Tanpa pemindahan ini saldo Bank Mandiri menjadi negatif | mustahil di dunia
+  // nyata dan langsung terlihat janggal di Neraca.
+  for (const month of ['01', '02', '03', '04', '05', '06', '07']) {
+    addManualJournal(`${FISCAL_YEAR}-${month}-24`, `Pemindahan dana operasional ${FISCAL_YEAR}-${month}`, [
+      { accountCode: ACC.bankPayroll, debit: 100_000_000, credit: 0, memo: 'Pengisian rekening penggajian' },
+      { accountCode: ACC.cash, debit: 7_500_000, credit: 0, memo: 'Pengisian kas kecil kantor' },
+      { accountCode: ACC.bankOps, debit: 0, credit: 107_500_000, memo: 'Transfer antar rekening perusahaan' },
+    ])
+  }
+
+  // Belanja modal: satu truk pengiriman dibeli tunai pada Maret. Tanpa ini,
+  // laporan arus kas tidak punya aktivitas investasi sama sekali.
+  addManualJournal('2026-03-16', 'Pembelian truk pengiriman Hino Dutro', [
+    { accountCode: '1510', debit: 385_000_000, credit: 0, memo: 'Kendaraan operasional armada gudang' },
+    { accountCode: ACC.bankOps, debit: 0, credit: 385_000_000, memo: 'Pembayaran ke dealer' },
+  ])
 
   for (const monthEnd of monthEnds) {
     addManualJournal(monthEnd, `Penyusutan aset tetap ${periodOf(monthEnd)}`, [
@@ -685,6 +824,12 @@ export function generateSeed(): SeedData {
     addManualJournal(monthEnd, `Bunga pinjaman bank ${periodOf(monthEnd)}`, [
       { accountCode: ACC.interest, debit: INTEREST_PER_MONTH, credit: 0, memo: 'Bunga kredit modal kerja' },
       { accountCode: ACC.bankOps, debit: 0, credit: INTEREST_PER_MONTH, memo: 'Autodebet bunga' },
+    ])
+
+    // Angsuran pokok kredit modal kerja | aktivitas pendanaan di arus kas.
+    addManualJournal(monthEnd, `Angsuran pokok kredit modal kerja ${periodOf(monthEnd)}`, [
+      { accountCode: '2400', debit: LOAN_PRINCIPAL_PER_MONTH, credit: 0, memo: 'Pelunasan pokok pinjaman' },
+      { accountCode: ACC.bankOps, debit: 0, credit: LOAN_PRINCIPAL_PER_MONTH, memo: 'Autodebet angsuran bank' },
     ])
 
     addManualJournal(monthEnd, `Taksiran PPh badan ${periodOf(monthEnd)}`, [
@@ -750,7 +895,7 @@ export function generateSeed(): SeedData {
   manualJournals.sort((a, b) => a.date.localeCompare(b.date) || a.number.localeCompare(b.number))
 
   /* ---------------------------------------------------------------------- */
-  /* Saldo awal — persediaan mengikuti nilai kartu stok                      */
+  /* Saldo awal | persediaan mengikuti nilai kartu stok                      */
   /* ---------------------------------------------------------------------- */
 
   const openingInventoryValue = openingStockMoves.reduce(
@@ -779,7 +924,7 @@ export function generateSeed(): SeedData {
   const totalDebit = openingDebits.reduce((sum, [, value]) => sum + value, 0)
   const totalCredit = openingCredits.reduce((sum, [, value]) => sum + value, 0)
 
-  // Laba ditahan menjadi angka penyeimbang — persis cara neraca awal disusun.
+  // Laba ditahan menjadi angka penyeimbang | persis cara neraca awal disusun.
   const openingBalances: OpeningBalance[] = [
     ...openingDebits.map(([code, debit]) => ({ code, debit, credit: 0 })),
     ...openingCredits.map(([code, credit]) => ({ code, debit: 0, credit })),

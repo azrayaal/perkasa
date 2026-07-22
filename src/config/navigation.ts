@@ -26,7 +26,7 @@ const FINANCE: UserRole[] = ['direksi', 'akuntan']
  * keuangan (beban → pajak → pembukuan), yang bermuara pada laporan
  * (neraca → laporan keuangan).
  *
- * EXTENSION POINT: tambah modul baru di sini — daftarkan route-nya di
+ * EXTENSION POINT: tambah modul baru di sini | daftarkan route-nya di
  * `router/index.ts` dengan `meta.roles` yang sama, lalu menunya otomatis muncul
  * untuk role yang berhak.
  */

@@ -9,7 +9,7 @@ const NUMBER_FORMATTER = new Intl.NumberFormat('id-ID', { maximumFractionDigits:
 
 /** Format angka rupiah, contoh: 9700000 -> "Rp 9.700.000". */
 export function formatCurrency(value: number): string {
-  // Intl menempel "Rp9.700.000" tanpa spasi — normalkan supaya lebih terbaca.
+  // Intl menempel "Rp9.700.000" tanpa spasi | normalkan supaya lebih terbaca.
   const formatted = IDR_FORMATTER.format(Math.round(value)).replace(/^Rp\s?/, 'Rp ')
   // Nilai negatif ditulis "-Rp 1.000", bukan "Rp -1.000".
   return formatted.replace('Rp -', '-Rp ')

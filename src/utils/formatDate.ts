@@ -4,7 +4,7 @@ const DATE_FORMATTER = new Intl.DateTimeFormat('id-ID', {
   year: 'numeric',
 })
 
-const PLACEHOLDER = '—'
+const PLACEHOLDER = '|'
 
 /** Format ISO date string ke format lokal, contoh: "2026-07-20" -> "20 Jul 2026". */
 export function formatDate(isoDate: string | null | undefined): string {

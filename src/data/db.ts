@@ -2,13 +2,13 @@
  * Database lokal untuk POC.
  *
  * Menyimpan HANYA fakta yang dicatat manusia: master data dan dokumen
- * transaksi. Jurnal, buku besar, neraca, dan laporan keuangan TIDAK disimpan —
+ * transaksi. Jurnal, buku besar, neraca, dan laporan keuangan TIDAK disimpan |
  * semuanya dihitung ulang dari dokumen di `services/postingService.ts`. Itulah
  * yang membuat modul-modulnya mustahil "berbeda angka".
  *
  * HANYA boleh diimport oleh folder `services/`.
  *
- * TODO: hapus file ini saat backend siap — `services/` akan memanggil API dan
+ * TODO: hapus file ini saat backend siap | `services/` akan memanggil API dan
  * seluruh operasi tulis pindah ke server.
  */
 import {
@@ -52,7 +52,7 @@ export interface Database {
 }
 
 /** Versi dinaikkan setiap bentuk data berubah, supaya seed lama dibuang. */
-const STORAGE_KEY = 'perkasa-erp.db.v1'
+const STORAGE_KEY = 'perkasa-erp.db.v3'
 
 function seed(): Database {
   const generated = generateSeed()
@@ -82,7 +82,7 @@ function load(): Database {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (raw) return JSON.parse(raw) as Database
   } catch {
-    // Data korup — jatuh kembali ke seed di bawah.
+    // Data korup | jatuh kembali ke seed di bawah.
   }
 
   const fresh = seed()
@@ -90,7 +90,7 @@ function load(): Database {
   return fresh
 }
 
-/** Akses baca. Jangan memutasi hasilnya langsung — pakai `commit()`. */
+/** Akses baca. Jangan memutasi hasilnya langsung | pakai `commit()`. */
 export function db(): Database {
   cache ??= load()
   return cache

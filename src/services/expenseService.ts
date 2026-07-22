@@ -3,7 +3,7 @@
  *
  * Setiap beban terikat langsung ke akun di bagan akun, jadi angka yang muncul
  * di halaman Beban adalah angka yang sama dengan baris Beban Operasional di
- * Laba Rugi — tidak ada rekap terpisah yang bisa berbeda.
+ * Laba Rugi | tidak ada rekap terpisah yang bisa berbeda.
  *
  * Beban juga menjadi sumber dua kewajiban pajak sekaligus: PPN masukan yang
  * bisa dikreditkan, dan PPh potong-pungut yang wajib disetor perusahaan.
@@ -30,9 +30,9 @@ export const WITHHOLDING_RATE: Record<WithholdingType, number> = {
 
 export const WITHHOLDING_LABEL: Record<WithholdingType, string> = {
   none: 'Tanpa potongan',
-  pph21: 'PPh 21 — Karyawan',
-  pph23: 'PPh 23 — Jasa (2%)',
-  'pph4-2': 'PPh Final 4(2) — Sewa (10%)',
+  pph21: 'PPh 21 | Karyawan',
+  pph23: 'PPh 23 | Jasa (2%)',
+  'pph4-2': 'PPh Final 4(2) | Sewa (10%)',
 }
 
 /** Kas yang benar-benar keluar: nilai beban + PPN, dikurangi PPh yang dipotong. */
@@ -51,12 +51,12 @@ export function buildExpenseRows(from?: IsoDate, to?: IsoDate): ExpenseRow[] {
     .sort((a, b) => b.expense.date.localeCompare(a.expense.date) || b.expense.number.localeCompare(a.expense.number))
 }
 
-/** TODO: replace with real API call — GET /expenses?from=&to= */
+/** TODO: replace with real API call | GET /expenses?from=&to= */
 export function getExpenseRows(from?: IsoDate, to?: IsoDate): Promise<ExpenseRow[]> {
   return respond(buildExpenseRows(from, to))
 }
 
-/** Komposisi beban per akun — dipakai halaman Beban dan Performa. */
+/** Komposisi beban per akun | dipakai halaman Beban dan Performa. */
 export function buildExpenseBreakdown(from: IsoDate, to: IsoDate): RankedItem[] {
   const rows = buildExpenseRows(from, to)
   const byAccount = new Map<string, number>()
@@ -78,7 +78,7 @@ export function buildExpenseBreakdown(from: IsoDate, to: IsoDate): RankedItem[] 
     .sort((a, b) => b.value - a.value)
 }
 
-/** TODO: replace with real API call — GET /expenses/breakdown?from=&to= */
+/** TODO: replace with real API call | GET /expenses/breakdown?from=&to= */
 export function getExpenseBreakdown(from: IsoDate, to: IsoDate): Promise<RankedItem[]> {
   return respond(buildExpenseBreakdown(from, to))
 }
@@ -88,10 +88,10 @@ export function getExpenseBreakdown(from: IsoDate, to: IsoDate): Promise<RankedI
 /* -------------------------------------------------------------------------- */
 
 /**
- * Catat beban baru. Nilai PPh dihitung dari tarif — bukan diketik user —
+ * Catat beban baru. Nilai PPh dihitung dari tarif | bukan diketik user |
  * supaya potongan pajak tidak pernah meleset dari ketentuan.
  *
- * TODO: replace with real API call — POST /expenses
+ * TODO: replace with real API call | POST /expenses
  */
 export function createExpense(payload: NewExpensePayload): Promise<Expense> {
   if (payload.amount <= 0) throw new ValidationError('Nilai beban harus lebih dari nol.')
@@ -128,11 +128,11 @@ export function createExpense(payload: NewExpensePayload): Promise<Expense> {
 /**
  * Lunasi beban yang masih terutang.
  *
- * Jurnal pengakuan bebannya TIDAK diutak-atik — pelunasan menghasilkan jurnal
+ * Jurnal pengakuan bebannya TIDAK diutak-atik | pelunasan menghasilkan jurnal
  * kas tersendiri (Beban Masih Harus Dibayar lawan Kas/Bank), persis praktik
  * akrual yang benar.
  *
- * TODO: replace with real API call — POST /expenses/:id/pay
+ * TODO: replace with real API call | POST /expenses/:id/pay
  */
 export function payExpense(id: string, accountCode: string, date: IsoDate): Promise<Expense> {
   const expense = db().expenses.find((row) => row.id === id)

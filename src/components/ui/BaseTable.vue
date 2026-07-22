@@ -27,7 +27,7 @@ defineSlots<{
 
 function cellText(column: TableColumn<T>, row: T): string {
   const value = column.value?.(row)
-  return value === undefined || value === null || value === '' ? '—' : String(value)
+  return value === undefined || value === null || value === '' ? '|' : String(value)
 }
 
 function alignClass(column: TableColumn<T>): string {

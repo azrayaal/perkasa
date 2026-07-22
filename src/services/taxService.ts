@@ -6,7 +6,7 @@
  * ber-PPN, PPh potong-pungut dari potongan pada beban, dan taksiran PPh badan
  * dari laba sebelum pajak di laporan laba rugi.
  *
- * Artinya: kalau ada faktur yang salah, SPT-nya ikut salah — persis seperti
+ * Artinya: kalau ada faktur yang salah, SPT-nya ikut salah | persis seperti
  * kenyataan, dan itulah gunanya semua modul memakai sumber yang sama.
  */
 import { CHART_OF_ACCOUNTS, ACC } from '@/data/chartOfAccounts'
@@ -45,12 +45,18 @@ export function buildVatSummary(period: PeriodKey): VatPeriodSummary {
   const outputBase = sales.reduce((sum, invoice) => sum + invoice.totals.dpp, 0)
   const outputVat = sales.reduce((sum, invoice) => sum + invoice.totals.ppn, 0)
 
+  // Barang bekas yang diterima lewat tukar tambah adalah PEROLEHAN: pelanggan
+  // PKP menerbitkan faktur pajak, jadi PPN-nya menjadi kredit pajak perusahaan.
+  const tradeIns = sales.flatMap((invoice) => (invoice.tradeIn ? [invoice.tradeIn] : []))
+
   const inputBase =
     purchases.reduce((sum, invoice) => sum + invoice.totals.dpp, 0) +
-    expenses.reduce((sum, expense) => sum + expense.amount, 0)
+    expenses.reduce((sum, expense) => sum + expense.amount, 0) +
+    tradeIns.reduce((sum, tradeIn) => sum + tradeIn.dpp, 0)
   const inputVat =
     purchases.reduce((sum, invoice) => sum + invoice.totals.ppn, 0) +
-    expenses.reduce((sum, expense) => sum + expense.ppn, 0)
+    expenses.reduce((sum, expense) => sum + expense.ppn, 0) +
+    tradeIns.reduce((sum, tradeIn) => sum + tradeIn.ppn, 0)
 
   const payable = outputVat - inputVat
 
@@ -68,9 +74,9 @@ export function buildVatSummary(period: PeriodKey): VatPeriodSummary {
 }
 
 const WITHHOLDING_META: Array<{ type: Exclude<WithholdingType, 'none'>; label: string; rateLabel: string }> = [
-  { type: 'pph21', label: 'PPh Pasal 21 — Karyawan', rateLabel: 'Efektif 3,5%' },
-  { type: 'pph23', label: 'PPh Pasal 23 — Jasa', rateLabel: '2% dari bruto' },
-  { type: 'pph4-2', label: 'PPh Final Pasal 4(2) — Sewa', rateLabel: '10% final' },
+  { type: 'pph21', label: 'PPh Pasal 21 | Karyawan', rateLabel: 'Efektif 3,5%' },
+  { type: 'pph23', label: 'PPh Pasal 23 | Jasa', rateLabel: '2% dari bruto' },
+  { type: 'pph4-2', label: 'PPh Final Pasal 4(2) | Sewa', rateLabel: '10% final' },
 ]
 
 function buildWithholdings(from: string, to: string): WithholdingSummary[] {
@@ -103,7 +109,7 @@ function buildCorporateEstimate(yearStart: string, to: string): CorporateTaxEsti
   }
 }
 
-/** TODO: replace with real API call — GET /tax/overview?period= */
+/** TODO: replace with real API call | GET /tax/overview?period= */
 export function getTaxOverview(period: PeriodKey): Promise<TaxOverview> {
   const database = db()
   const yearStart = `${database.company.fiscalYear}-01-01`
@@ -124,7 +130,7 @@ export function getTaxOverview(period: PeriodKey): Promise<TaxOverview> {
       id: invoice.id,
       number: invoice.number,
       date: invoice.date,
-      customerName: customerName.get(invoice.customerId) ?? '—',
+      customerName: customerName.get(invoice.customerId) ?? '|',
       ppn: invoice.totals.ppn,
     }))
 

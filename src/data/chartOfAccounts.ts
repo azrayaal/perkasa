@@ -1,9 +1,9 @@
 /**
- * Bagan Akun (Chart of Accounts) PT Perkasa Baja Nusantara.
+ * Bagan Akun (Chart of Accounts) PT Perkasa Gemilang Distrindo.
  *
  * Ini adalah tulang punggung integrasi: setiap modul (penjualan, pembelian,
  * gudang, beban, pajak) hanya boleh menyentuh buku lewat kode akun di sini.
- * Menambah akun baru cukup di file ini — neraca, laba rugi, dan buku besar
+ * Menambah akun baru cukup di file ini | neraca, laba rugi, dan buku besar
  * ikut menyesuaikan sendiri karena keduanya membaca `group` & `type`.
  */
 import type { Account, AccountCode, AccountGroup } from '@/types'
@@ -11,8 +11,8 @@ import type { Account, AccountCode, AccountGroup } from '@/types'
 export const CHART_OF_ACCOUNTS: Account[] = [
   /* Aset lancar */
   { code: '1100', name: 'Kas Kecil', type: 'asset', group: 'kas-bank', normalBalance: 'debit', cash: true },
-  { code: '1110', name: 'Bank BCA — Operasional', type: 'asset', group: 'kas-bank', normalBalance: 'debit', cash: true },
-  { code: '1120', name: 'Bank Mandiri — Payroll', type: 'asset', group: 'kas-bank', normalBalance: 'debit', cash: true },
+  { code: '1110', name: 'Bank BCA | Operasional', type: 'asset', group: 'kas-bank', normalBalance: 'debit', cash: true },
+  { code: '1120', name: 'Bank Mandiri | Payroll', type: 'asset', group: 'kas-bank', normalBalance: 'debit', cash: true },
   { code: '1200', name: 'Piutang Usaha', type: 'asset', group: 'piutang', normalBalance: 'debit', description: 'Saldo mengikuti faktur penjualan yang belum lunas.' },
   { code: '1300', name: 'Persediaan Barang Dagang', type: 'asset', group: 'persediaan', normalBalance: 'debit', description: 'Saldo mengikuti nilai kartu stok gudang.' },
   { code: '1400', name: 'PPN Masukan', type: 'asset', group: 'aset-lancar-lain', normalBalance: 'debit' },
@@ -50,6 +50,7 @@ export const CHART_OF_ACCOUNTS: Account[] = [
   /* Harga pokok */
   { code: '5100', name: 'Harga Pokok Penjualan', type: 'cogs', group: 'harga-pokok', normalBalance: 'debit' },
   { code: '5200', name: 'Selisih Persediaan', type: 'cogs', group: 'harga-pokok', normalBalance: 'debit', description: 'Susut/lebih hasil stock opname gudang.' },
+  { code: '5300', name: 'Selisih Penilaian Tukar Tambah', type: 'cogs', group: 'harga-pokok', normalBalance: 'debit', description: 'Selisih antara nilai tukar tambah yang disepakati dan harga pokok standar barang bekas.' },
 
   /* Beban operasional */
   { code: '6100', name: 'Beban Gaji & Tunjangan', type: 'expense', group: 'beban-operasional', normalBalance: 'debit' },
@@ -72,7 +73,7 @@ export const CHART_OF_ACCOUNTS: Account[] = [
 
 /**
  * Alias akun yang dipakai posting engine.
- * Semua kode akun di service layer WAJIB lewat konstanta ini — tidak boleh ada
+ * Semua kode akun di service layer WAJIB lewat konstanta ini | tidak boleh ada
  * string '1200' yang ditulis langsung, supaya pemetaan bisa diubah di satu tempat.
  */
 export const ACC = {
@@ -99,6 +100,7 @@ export const ACC = {
   otherIncome: '4900',
   cogs: '5100',
   inventoryVariance: '5200',
+  tradeInVariance: '5300',
   interest: '7100',
   corporateTaxExpense: '8100',
 } as const satisfies Record<string, AccountCode>
@@ -122,7 +124,7 @@ export function accountName(code: AccountCode): string {
   return accountByCode(code).name
 }
 
-/** Akun kas & bank — dipakai laporan arus kas dan pemilih rekening pembayaran. */
+/** Akun kas & bank | dipakai laporan arus kas dan pemilih rekening pembayaran. */
 export const CASH_ACCOUNTS: Account[] = CHART_OF_ACCOUNTS.filter((account) => account.cash === true)
 
 /** Akun beban yang boleh dipilih user saat mencatat beban operasional. */

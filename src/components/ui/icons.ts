@@ -1,5 +1,5 @@
 /**
- * Set ikon inline (stroke, viewBox 24) — sengaja tanpa dependency icon library
+ * Set ikon inline (stroke, viewBox 24) | sengaja tanpa dependency icon library
  * supaya bundle POC tetap ringan dan tidak ada request eksternal.
  * Tambah ikon baru cukup di sini; `IconName` otomatis ikut bertambah.
  */

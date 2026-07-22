@@ -115,12 +115,12 @@ export function buildIncomeStatement(from: IsoDate, to: IsoDate): IncomeStatemen
   }
 }
 
-/** TODO: replace with real API call — GET /reports/income-statement?from=&to= */
+/** TODO: replace with real API call | GET /reports/income-statement?from=&to= */
 export function getIncomeStatement(from: IsoDate, to: IsoDate): Promise<IncomeStatement> {
   return respond(buildIncomeStatement(from, to))
 }
 
-/** Laba bersih periode — dipakai neraca & dashboard. */
+/** Laba bersih periode | dipakai neraca & dashboard. */
 export function netProfitBetween(from: IsoDate, to: IsoDate): number {
   return buildIncomeStatement(from, to).netProfit
 }
@@ -140,7 +140,7 @@ export function buildBalanceSheet(asOf: IsoDate): BalanceSheet {
   const equity = section('ekuitas', 'Ekuitas', accountsInGroups(EQUITY_GROUPS), balances)
 
   // Laba tahun berjalan belum ditutup ke laba ditahan, jadi ditambahkan
-  // sebagai baris tersendiri — persis penyajian neraca interim.
+  // sebagai baris tersendiri | persis penyajian neraca interim.
   const currentEarnings = netProfitBetween(yearStart, asOf)
 
   const totalAssets = currentAssets.total + fixedAssets.total
@@ -163,7 +163,7 @@ export function buildBalanceSheet(asOf: IsoDate): BalanceSheet {
   }
 }
 
-/** TODO: replace with real API call — GET /reports/balance-sheet?asOf= */
+/** TODO: replace with real API call | GET /reports/balance-sheet?asOf= */
 export function getBalanceSheet(asOf: IsoDate): Promise<BalanceSheet> {
   return respond(buildBalanceSheet(asOf))
 }
@@ -268,7 +268,7 @@ export function buildCashFlow(from: IsoDate, to: IsoDate): CashFlowStatement {
   }
 }
 
-/** TODO: replace with real API call — GET /reports/cash-flow?from=&to= */
+/** TODO: replace with real API call | GET /reports/cash-flow?from=&to= */
 export function getCashFlow(from: IsoDate, to: IsoDate): Promise<CashFlowStatement> {
   return respond(buildCashFlow(from, to))
 }
@@ -297,13 +297,13 @@ export function buildEquityStatement(from: IsoDate, to: IsoDate): EquityStatemen
   }
 }
 
-/** TODO: replace with real API call — GET /reports/equity?from=&to= */
+/** TODO: replace with real API call | GET /reports/equity?from=&to= */
 export function getEquityStatement(from: IsoDate, to: IsoDate): Promise<EquityStatement> {
   return respond(buildEquityStatement(from, to))
 }
 
 /**
- * Paket lengkap laporan keuangan satu periode — dipakai halaman
+ * Paket lengkap laporan keuangan satu periode | dipakai halaman
  * "Laporan Keuangan" supaya keempatnya dimuat dalam satu permintaan.
  */
 export interface FinancialStatements {
@@ -313,7 +313,7 @@ export interface FinancialStatements {
   equity: EquityStatement
 }
 
-/** TODO: replace with real API call — GET /reports/financial-statements?from=&to= */
+/** TODO: replace with real API call | GET /reports/financial-statements?from=&to= */
 export function getFinancialStatements(from: IsoDate, to: IsoDate): Promise<FinancialStatements> {
   return respond({
     income: buildIncomeStatement(from, to),

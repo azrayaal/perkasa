@@ -125,7 +125,7 @@ export const router = createRouter({
 
 /**
  * Guard tunggal: cek sesi, lalu cek role.
- * Aturan akses hidup di `meta.roles` tiap route — bukan if-else tersebar di view.
+ * Aturan akses hidup di `meta.roles` tiap route | bukan if-else tersebar di view.
  */
 router.beforeEach((to) => {
   const auth = useAuthStore()

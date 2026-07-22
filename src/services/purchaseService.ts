@@ -33,8 +33,8 @@ function toRow(invoice: PurchaseInvoice): PurchaseRow {
 
   return {
     invoice,
-    supplierName: database.suppliers.find((row) => row.id === invoice.supplierId)?.name ?? '—',
-    warehouseName: database.warehouses.find((row) => row.id === invoice.warehouseId)?.name ?? '—',
+    supplierName: database.suppliers.find((row) => row.id === invoice.supplierId)?.name ?? '|',
+    warehouseName: database.warehouses.find((row) => row.id === invoice.warehouseId)?.name ?? '|',
     status,
     outstanding: invoice.status === 'draft' ? 0 : invoice.totals.total - invoice.paidAmount,
     overdueDays: overdueDays(status, invoice.dueDate, todayIso),
@@ -48,12 +48,12 @@ export function buildPurchaseRows(from?: IsoDate, to?: IsoDate): PurchaseRow[] {
     .sort((a, b) => b.invoice.date.localeCompare(a.invoice.date) || b.invoice.number.localeCompare(a.invoice.number))
 }
 
-/** TODO: replace with real API call — GET /purchases?from=&to= */
+/** TODO: replace with real API call | GET /purchases?from=&to= */
 export function getPurchaseRows(from?: IsoDate, to?: IsoDate): Promise<PurchaseRow[]> {
   return respond(buildPurchaseRows(from, to))
 }
 
-/** TODO: replace with real API call — GET /purchases/:id */
+/** TODO: replace with real API call | GET /purchases/:id */
 export function getPurchaseInvoiceDetail(id: DocumentId): Promise<PurchaseInvoiceDetail> {
   const database = db()
   const invoice = database.purchaseInvoices.find((row) => row.id === id)
@@ -93,7 +93,7 @@ export function buildPayableAging(): Aging {
   )
 }
 
-/** TODO: replace with real API call — GET /purchases/aging */
+/** TODO: replace with real API call | GET /purchases/aging */
 export function getPayableAging(): Promise<Aging> {
   return respond(buildPayableAging())
 }
@@ -106,7 +106,7 @@ export function getPayableAging(): Promise<Aging> {
  * Catat faktur pembelian. Berbeda dari penjualan, faktur pembelian langsung
  * berstatus `posted`: barangnya sudah diterima gudang saat dokumen dibuat.
  *
- * TODO: replace with real API call — POST /purchases
+ * TODO: replace with real API call | POST /purchases
  */
 export function createPurchaseInvoice(payload: NewPurchaseInvoicePayload): Promise<PurchaseInvoice> {
   const database = db()
@@ -129,7 +129,14 @@ export function createPurchaseInvoice(payload: NewPurchaseInvoicePayload): Promi
       dueDate: addDays(payload.date, supplier.paymentTermDays),
       supplierId: payload.supplierId,
       warehouseId: payload.warehouseId,
-      lines: payload.lines,
+      // Objek polos: payload dari form Vue berupa proxy reaktif yang tidak
+      // bisa di-`structuredClone()` oleh lapisan transport.
+      lines: payload.lines.map((line) => ({
+        productId: line.productId,
+        qty: line.qty,
+        unitPrice: line.unitPrice,
+        discountPercent: line.discountPercent,
+      })),
       totals: calcTotals(payload.lines, database.company.vatRate),
       paidAmount: 0,
       status: 'posted',
@@ -146,7 +153,7 @@ export function createPurchaseInvoice(payload: NewPurchaseInvoicePayload): Promi
 /**
  * Catat pembayaran ke pemasok: utang berkurang, kas keluar.
  *
- * TODO: replace with real API call — POST /payments
+ * TODO: replace with real API call | POST /payments
  */
 export function recordPurchasePayment(payload: NewPaymentPayload): Promise<Payment> {
   const database = db()

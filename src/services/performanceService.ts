@@ -1,7 +1,7 @@
 /**
  * Modul Performa.
  *
- * Semua indikator di sini adalah turunan dari laporan keuangan — bukan angka
+ * Semua indikator di sini adalah turunan dari laporan keuangan | bukan angka
  * marketing yang dihitung terpisah. Marjin kotor di halaman Performa dijamin
  * sama dengan laba kotor di Laba Rugi karena keduanya memanggil fungsi yang
  * sama, dan perputaran persediaan memakai HPP dari jurnal yang sama.
@@ -198,7 +198,7 @@ function buildRatios(from: IsoDate, to: IsoDate): FinancialRatio[] {
       format: 'ratio',
       benchmark: 1.5,
       direction: 'higher',
-      hint: 'Aset lancar dibagi kewajiban lancar — kemampuan bayar jangka pendek.',
+      hint: 'Aset lancar dibagi kewajiban lancar | kemampuan bayar jangka pendek.',
     },
     {
       key: 'debt-to-equity',
@@ -255,7 +255,7 @@ function buildRatios(from: IsoDate, to: IsoDate): FinancialRatio[] {
 /* Laporan performa                                                            */
 /* -------------------------------------------------------------------------- */
 
-/** TODO: replace with real API call — GET /performance?from=&to= */
+/** TODO: replace with real API call | GET /performance?from=&to= */
 export function getPerformanceReport(from: IsoDate, to: IsoDate): Promise<PerformanceReport> {
   const ratios = buildRatios(from, to)
   const turnover = ratios.find((row) => row.key === 'inventory-turnover')?.value ?? 0
@@ -272,12 +272,12 @@ export function getPerformanceReport(from: IsoDate, to: IsoDate): Promise<Perfor
   })
 }
 
-/** Nilai pembelian periode berjalan — dipakai kartu ringkas di halaman Performa. */
+/** Nilai pembelian periode berjalan | dipakai kartu ringkas di halaman Performa. */
 export function purchaseTotalBetween(from: IsoDate, to: IsoDate): number {
   return buildPurchaseRows(from, to).reduce((sum, row) => sum + row.invoice.totals.dpp, 0)
 }
 
-/** Mutasi bersih satu akun pada periode — helper kecil untuk widget dashboard. */
+/** Mutasi bersih satu akun pada periode | helper kecil untuk widget dashboard. */
 export function accountMutation(code: string, from: IsoDate, to: IsoDate): number {
   return mutationsBetween(from, to).get(code) ?? 0
 }

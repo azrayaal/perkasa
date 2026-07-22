@@ -4,7 +4,7 @@
  * Kartu stok TIDAK disimpan. Ia dirakit ulang dari saldo awal + faktur
  * pembelian (barang masuk) + faktur penjualan non-draft (barang keluar) +
  * hasil stock opname. Karena itu, nilai persediaan di halaman Gudang selalu
- * sama dengan saldo akun 1300 Persediaan di Neraca — keduanya bersumber dari
+ * sama dengan saldo akun 1300 Persediaan di Neraca | keduanya bersumber dari
  * dokumen yang sama.
  */
 import { db, commit } from '@/data/db'
@@ -50,7 +50,7 @@ export function buildStockMoves(): StockMove[] {
   }
 
   for (const invoice of database.salesInvoices) {
-    // Draft belum mengeluarkan barang — sama seperti ia belum dijurnal.
+    // Draft belum mengeluarkan barang | sama seperti ia belum dijurnal.
     if (invoice.status === 'draft') continue
 
     for (const line of invoice.lines) {
@@ -66,6 +66,24 @@ export function buildStockMoves(): StockMove[] {
         refId: invoice.id,
         refNumber: invoice.number,
         note: 'Pengiriman barang ke pelanggan',
+      })
+    }
+
+    // Arus balik: barang bekas hasil tukar tambah justru MASUK gudang pada
+    // faktur penjualan yang sama.
+    for (const line of invoice.tradeIn?.lines ?? []) {
+      moves.push({
+        id: `SM-${invoice.id}-TT-${line.productId}`,
+        date: invoice.date,
+        productId: line.productId,
+        warehouseId: invoice.tradeIn!.warehouseId,
+        qty: line.qty,
+        type: 'in',
+        unitCost: productById.get(line.productId)?.cost ?? 0,
+        refType: 'sales',
+        refId: invoice.id,
+        refNumber: invoice.number,
+        note: 'Barang tukar tambah diterima dari pelanggan',
       })
     }
   }
@@ -139,7 +157,7 @@ function buildPositions(asOf: IsoDate): StockPosition[] {
   })
 }
 
-/** TODO: replace with real API call — GET /inventory/positions */
+/** TODO: replace with real API call | GET /inventory/positions */
 export function getStockPositions(asOf: IsoDate = today()): Promise<StockPosition[]> {
   return respond(buildPositions(asOf))
 }
@@ -147,12 +165,12 @@ export function getStockPositions(asOf: IsoDate = today()): Promise<StockPositio
 /** Versi sinkron untuk service lain (dashboard, performa, neraca pembanding). */
 export { buildPositions }
 
-/** Nilai persediaan menurut kartu stok — pembanding saldo akun 1300. */
+/** Nilai persediaan menurut kartu stok | pembanding saldo akun 1300. */
 export function inventoryValueAsOf(asOf: IsoDate): number {
   return buildPositions(asOf).reduce((sum, position) => sum + position.value, 0)
 }
 
-/** TODO: replace with real API call — GET /inventory/warehouses */
+/** TODO: replace with real API call | GET /inventory/warehouses */
 export function getWarehouseSummaries(asOf: IsoDate = today()): Promise<WarehouseSummary[]> {
   const database = db()
   const positions = buildPositions(asOf)
@@ -182,7 +200,7 @@ export function getWarehouseSummaries(asOf: IsoDate = today()): Promise<Warehous
   return respond(summaries)
 }
 
-/** TODO: replace with real API call — GET /inventory/card?productId= */
+/** TODO: replace with real API call | GET /inventory/card?productId= */
 export function getStockCard(productId: ProductId, warehouseId: WarehouseId | null = null): Promise<StockCardRow[]> {
   const warehouseName = new Map(db().warehouses.map((row) => [row.id, row.name]))
 
@@ -193,7 +211,7 @@ export function getStockCard(productId: ProductId, warehouseId: WarehouseId | nu
   let balance = 0
   const rows: StockCardRow[] = moves.map((move) => {
     balance += move.qty
-    return { move, warehouseName: warehouseName.get(move.warehouseId) ?? '—', balance }
+    return { move, warehouseName: warehouseName.get(move.warehouseId) ?? '|', balance }
   })
 
   // Mutasi terbaru di atas; saldo berjalan tetap dihitung dari yang paling lama.
@@ -206,10 +224,10 @@ export function getStockCard(productId: ProductId, warehouseId: WarehouseId | nu
 
 /**
  * Catat hasil stock opname.
- * Penyesuaian ini langsung menjurnal Selisih Persediaan lawan Persediaan —
+ * Penyesuaian ini langsung menjurnal Selisih Persediaan lawan Persediaan |
  * tidak ada koreksi stok yang lolos tanpa jejak akuntansi.
  *
- * TODO: replace with real API call — POST /inventory/adjustments
+ * TODO: replace with real API call | POST /inventory/adjustments
  */
 export function createStockAdjustment(payload: NewStockAdjustmentPayload): Promise<StockAdjustment> {
   if (payload.qtyDiff === 0) {

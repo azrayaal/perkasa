@@ -5,7 +5,7 @@ const props = withDefaults(
   defineProps<{
     title?: string
     subtitle?: string
-    /** Hover shadow — matikan untuk card statis yang tidak bisa diklik. */
+    /** Hover shadow | matikan untuk card statis yang tidak bisa diklik. */
     interactive?: boolean
     /** Hilangkan padding badan card, mis. saat isinya tabel full-bleed. */
     flush?: boolean

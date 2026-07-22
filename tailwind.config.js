@@ -55,15 +55,15 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-        mono: ['"Fira Code"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       fontSize: {
         h1: ['32px', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }],
         h2: ['24px', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '700' }],
         h3: ['18px', { lineHeight: '1.4', fontWeight: '600' }],
         h4: ['15px', { lineHeight: '1.5', fontWeight: '600' }],
-        /** Angka besar pada kartu statistik; 24px agar nominal miliaran muat 4 kolom. */
-        metric: ['24px', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }],
+        /** Angka besar pada kartu statistik; 21px agar nominal miliaran muat 4 kolom. */
+        metric: ['21px', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }],
         body: ['15px', { lineHeight: '1.6' }],
         small: ['13px', { lineHeight: '1.5' }],
         code: ['13px', { lineHeight: '1.6' }],
@@ -71,7 +71,7 @@ export default {
       },
       borderRadius: {
         control: '8px',
-        /** Kartu & modal membulat lembut, ciri khas referensi. */
+        /** Kartu & modal membulat lembut. */
         card: '14px',
         rail: '12px',
       },

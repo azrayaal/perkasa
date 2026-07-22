@@ -1,5 +1,5 @@
 /**
- * Modul Pembukuan — jurnal umum & buku besar.
+ * Modul Pembukuan | jurnal umum & buku besar.
  *
  * Halaman ini adalah "kotak hitam" perusahaan: setiap dokumen di modul mana pun
  * pasti muncul di sini sebagai jurnal berpasangan. Akuntan tetap bisa menulis
@@ -53,7 +53,7 @@ function matches(entry: JournalEntry, query: JournalQuery): boolean {
   )
 }
 
-/** TODO: replace with real API call — GET /journal?from=&to=&source= */
+/** TODO: replace with real API call | GET /journal?from=&to=&source= */
 export function getJournalEntries(query: JournalQuery): Promise<JournalEntry[]> {
   const entries = buildJournal()
     .filter((entry) => matches(entry, query))
@@ -62,7 +62,7 @@ export function getJournalEntries(query: JournalQuery): Promise<JournalEntry[]> 
   return respond(entries)
 }
 
-/** Ringkasan jurnal satu periode — dipakai kartu statistik halaman Pembukuan. */
+/** Ringkasan jurnal satu periode | dipakai kartu statistik halaman Pembukuan. */
 export function getJournalSummary(from: IsoDate, to: IsoDate): Promise<JournalSummary> {
   const entries = buildJournal().filter((entry) => entry.date >= from && entry.date <= to)
 
@@ -92,7 +92,7 @@ export function getJournalSummary(from: IsoDate, to: IsoDate): Promise<JournalSu
  * Simpan jurnal manual. Jurnal yang tidak seimbang ditolak di sini, sehingga
  * neraca saldo aplikasi dijamin selalu balance.
  *
- * TODO: replace with real API call — POST /journal
+ * TODO: replace with real API call | POST /journal
  */
 export function createManualJournal(payload: NewManualJournalPayload): Promise<ManualJournal> {
   const usable = payload.lines.filter((line) => line.debit > 0 || line.credit > 0)
@@ -104,7 +104,7 @@ export function createManualJournal(payload: NewManualJournalPayload): Promise<M
 
   if (totalDebit !== totalCredit) {
     throw new ValidationError(
-      `Jurnal belum seimbang — selisih ${Math.abs(totalDebit - totalCredit).toLocaleString('id-ID')}.`,
+      `Jurnal belum seimbang | selisih ${Math.abs(totalDebit - totalCredit).toLocaleString('id-ID')}.`,
     )
   }
 
@@ -119,7 +119,14 @@ export function createManualJournal(payload: NewManualJournalPayload): Promise<M
       number: `JU-${database.company.fiscalYear}-${String(sequence).padStart(4, '0')}`,
       date: payload.date,
       description: payload.description,
-      lines: usable,
+      // Objek polos: baris dari form Vue berupa proxy reaktif yang tidak bisa
+      // di-`structuredClone()` oleh lapisan transport.
+      lines: usable.map((line) => ({
+        accountCode: line.accountCode,
+        debit: line.debit,
+        credit: line.credit,
+        memo: line.memo,
+      })),
     }
     database.manualJournals.push(journal)
     return journal

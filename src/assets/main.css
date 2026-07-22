@@ -8,11 +8,11 @@
  *
  * Palet Perkasa: navy industri sebagai warna aksi & sidebar, AMBER sebagai
  * aksen sorotan (nav aktif, pill status, angka penting). Amber tidak pernah
- * menjadi latar teks putih — kontrasnya gagal; teks di atas amber selalu gelap.
+ * menjadi latar teks putih | kontrasnya gagal; teks di atas amber selalu gelap.
  */
 @layer base {
   :root {
-    --brand: 245 176 26; /* #F5B01A — amber sorotan */
+    --brand: 245 176 26; /* #F5B01A | amber sorotan */
     --brand-hover: 232 163 16;
     --brand-ink: 39 28 4; /* teks/ikon di atas amber */
 
@@ -33,7 +33,7 @@
     --info: 37 99 235;
 
     /*
-     * Palet grafik — urutan tetap: 1 pendapatan, 2 beban/HPP, 3 laba.
+     * Palet grafik | urutan tetap: 1 pendapatan, 2 beban/HPP, 3 laba.
      * Nilainya lolos uji keterbacaan buta warna (protan/deutan/tritan ΔE ≥ 8)
      * dan kontras ≥ 3:1 terhadap latar kartu. Jangan menukar urutannya:
      * warna mengikuti ENTITAS, bukan peringkat, supaya filter tidak mengecat
@@ -45,7 +45,7 @@
     --chart-3: 13 148 136;
 
     /*
-     * Sidebar punya set token sendiri karena selalu gelap — termasuk saat
+     * Sidebar punya set token sendiri karena selalu gelap | termasuk saat
      * halaman dalam mode terang. Warnanya tidak boleh ikut token halaman,
      * kalau tidak ikonnya jadi tak terbaca di light mode.
      */
@@ -74,7 +74,7 @@
     --sidebar: 9 14 23;
     --sidebar-line: 30 42 60;
 
-    /* Langkah grafik untuk latar gelap — divalidasi ulang, bukan dibalik. */
+    /* Langkah grafik untuk latar gelap | divalidasi ulang, bukan dibalik. */
     --chart-1: 59 130 246;
     --chart-2: 196 127 14;
     --chart-3: 15 163 150;
@@ -104,7 +104,7 @@
 
   /**
    * Angka uang di tabel & laporan: monospace dengan lebar digit tetap supaya
-   * kolom rupiah rata dan mudah dibandingkan sekilas — syarat mutlak laporan
+   * kolom rupiah rata dan mudah dibandingkan sekilas | syarat mutlak laporan
    * keuangan.
    */
   .amount {

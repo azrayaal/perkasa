@@ -1,7 +1,7 @@
 /**
  * Buku besar & neraca saldo.
  *
- * Semua angka lahir dari `buildJournal()` — tidak ada saldo yang disimpan.
+ * Semua angka lahir dari `buildJournal()` | tidak ada saldo yang disimpan.
  * Service laporan (neraca, laba rugi, arus kas) memakai primitif di file ini
  * supaya definisi "saldo akun" hanya ada satu di seluruh aplikasi.
  */
@@ -119,7 +119,7 @@ function buildLedgerAccount(account: Account, from: IsoDate, to: IsoDate): Ledge
   return { account, openingBalance, rows, totalDebit, totalCredit, closingBalance: balance }
 }
 
-/** TODO: replace with real API call — GET /ledger/:code?from=&to= */
+/** TODO: replace with real API call | GET /ledger/:code?from=&to= */
 export function getLedgerAccount(code: AccountCode, from: IsoDate, to: IsoDate): Promise<LedgerAccount> {
   return respond(buildLedgerAccount(accountByCode(code), from, to))
 }
@@ -182,7 +182,7 @@ function buildTrialBalance(from: IsoDate, to: IsoDate): TrialBalance {
   return { rows, totalDebit, totalCredit, difference: totalDebit - totalCredit }
 }
 
-/** TODO: replace with real API call — GET /reports/trial-balance?from=&to= */
+/** TODO: replace with real API call | GET /reports/trial-balance?from=&to= */
 export function getTrialBalance(from: IsoDate, to: IsoDate): Promise<TrialBalance> {
   return respond(buildTrialBalance(from, to))
 }

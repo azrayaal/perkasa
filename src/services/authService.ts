@@ -16,7 +16,7 @@ function toPublicUser(account: (typeof authAccounts)[number]): AuthUser {
   return user
 }
 
-/** TODO: replace with real API call — POST /auth/login */
+/** TODO: replace with real API call | POST /auth/login */
 export async function login({ email, password }: LoginPayload): Promise<AuthUser> {
   const account = authAccounts.find(
     (candidate) =>
@@ -28,7 +28,7 @@ export async function login({ email, password }: LoginPayload): Promise<AuthUser
   return respond(toPublicUser(account))
 }
 
-/** TODO: replace with real API call — POST /auth/logout */
+/** TODO: replace with real API call | POST /auth/logout */
 export function logout(): Promise<void> {
   return respond(undefined)
 }

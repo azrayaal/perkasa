@@ -1,5 +1,5 @@
 /**
- * Mesin posting — jantung integrasi Perkasa ERP.
+ * Mesin posting | jantung integrasi Perkasa ERP.
  *
  * Tidak ada satu pun jurnal yang disimpan di database (kecuali jurnal manual
  * yang memang diketik akuntan). Seluruh jurnal DITURUNKAN dari dokumen setiap
@@ -13,7 +13,7 @@
  *   Selisih opname    -> Selisih Persediaan / Persediaan
  *
  * Efeknya: mengubah satu faktur otomatis mengubah buku besar, neraca saldo,
- * neraca, laba rugi, arus kas, dan modul pajak — tanpa proses "posting" manual
+ * neraca, laba rugi, arus kas, dan modul pajak | tanpa proses "posting" manual
  * yang bisa terlupa.
  */
 import { ACC, accountName } from '@/data/chartOfAccounts'
@@ -48,8 +48,13 @@ function line(accountCode: string, debit: number, credit: number, memo: string):
 /* Aturan posting per dokumen                                                  */
 /* -------------------------------------------------------------------------- */
 
-function postSalesInvoice(invoice: SalesInvoice, customerName: string): JournalEntry | null {
-  // Draft belum menjadi transaksi — tidak menyentuh buku sama sekali.
+function postSalesInvoice(
+  invoice: SalesInvoice,
+  customerName: string,
+  /** Harga pokok standar tiap SKU, untuk menilai barang bekas yang masuk. */
+  standardCost: Map<string, number>,
+): JournalEntry | null {
+  // Draft belum menjadi transaksi | tidak menyentuh buku sama sekali.
   if (invoice.status === 'draft') return null
 
   const lines: JournalLine[] = [
@@ -67,6 +72,42 @@ function postSalesInvoice(invoice: SalesInvoice, customerName: string): JournalE
     line(ACC.cogs, invoice.cogs, 0, 'Harga pokok barang terjual'),
     line(ACC.inventory, 0, invoice.cogs, 'Pengeluaran barang dari gudang'),
   )
+
+  /*
+   * Tukar tambah: barang bekas masuk gudang dan langsung memotong piutang.
+   *
+   * Persediaan didebit sebesar HARGA POKOK STANDAR SKU bekas | bukan nilai yang
+   * dinegosiasi | supaya saldo akun 1300 tetap sama persis dengan nilai kartu
+   * stok (yang juga memakai biaya standar). Selisih tawar-menawarnya diakui
+   * sebagai untung/rugi penilaian di akun 5300, bukan disembunyikan.
+   */
+  if (invoice.tradeIn) {
+    const { tradeIn } = invoice
+
+    const standardValue = tradeIn.lines.reduce(
+      (sum, row) => sum + row.qty * (standardCost.get(row.productId) ?? 0),
+      0,
+    )
+    const variance = tradeIn.dpp - standardValue
+
+    lines.push(line(ACC.inventory, standardValue, 0, 'Barang bekas tukar tambah masuk gudang'))
+
+    if (variance !== 0) {
+      lines.push(
+        variance > 0
+          ? line(ACC.tradeInVariance, variance, 0, 'Nilai tukar tambah di atas harga pokok standar')
+          : line(ACC.tradeInVariance, 0, -variance, 'Nilai tukar tambah di bawah harga pokok standar'),
+      )
+    }
+
+    if (tradeIn.ppn > 0) {
+      lines.push(line(ACC.vatIn, tradeIn.ppn, 0, 'PPN masukan atas penyerahan barang bekas'))
+    }
+
+    lines.push(
+      line(ACC.receivable, 0, tradeIn.total, `Potongan tukar tambah dari ${customerName}`),
+    )
+  }
 
   return {
     id: `JE-${invoice.id}`,
@@ -148,7 +189,7 @@ function postExpense(expense: Expense): JournalEntry {
   }
 }
 
-/** Pelunasan beban yang tadinya diakui sebagai utang — jurnal kas tersendiri. */
+/** Pelunasan beban yang tadinya diakui sebagai utang | jurnal kas tersendiri. */
 function postExpenseSettlement(expense: Expense): JournalEntry | null {
   if (!expense.settlement) return null
 
@@ -158,7 +199,7 @@ function postExpenseSettlement(expense: Expense): JournalEntry | null {
     id: `JE-${expense.id}-PAY`,
     number: '',
     date: expense.settlement.date,
-    description: `Pelunasan beban — ${expense.description}`,
+    description: `Pelunasan beban | ${expense.description}`,
     source: 'payment',
     refId: expense.id,
     refNumber: expense.number,
@@ -187,8 +228,8 @@ function postPayment(payment: Payment, partnerName: string, invoiceNumber: strin
     date: payment.date,
     description:
       payment.direction === 'in'
-        ? `Penerimaan piutang — ${partnerName}`
-        : `Pembayaran utang — ${partnerName}`,
+        ? `Penerimaan piutang | ${partnerName}`
+        : `Pembayaran utang | ${partnerName}`,
     source: 'payment',
     refId: payment.invoiceId,
     refNumber: payment.number,
@@ -204,7 +245,7 @@ function postStockAdjustment(adjustment: StockAdjustment, productName: string, u
     id: `JE-${adjustment.id}`,
     number: '',
     date: adjustment.date,
-    description: `Penyesuaian stok — ${productName}`,
+    description: `Penyesuaian stok | ${productName}`,
     source: 'inventory',
     refId: adjustment.id,
     refNumber: adjustment.number,
@@ -228,7 +269,7 @@ function postStockAdjustment(adjustment: StockAdjustment, productName: string, u
  * Seluruh jurnal aplikasi, urut tanggal dan sudah bernomor.
  *
  * Sinkron: fungsi ini dipanggil service lain (buku besar, neraca, laporan),
- * jadi tidak dibungkus `respond()` — pembungkus async ada di service pemanggil.
+ * jadi tidak dibungkus `respond()` | pembungkus async ada di service pemanggil.
  */
 export function buildJournal(): JournalEntry[] {
   const database = db()
@@ -257,8 +298,14 @@ export function buildJournal(): JournalEntry[] {
     })
   }
 
+  const standardCost = new Map(database.products.map((row) => [row.id, row.cost]))
+
   for (const invoice of database.salesInvoices) {
-    const entry = postSalesInvoice(invoice, customerName.get(invoice.customerId) ?? 'Pelanggan')
+    const entry = postSalesInvoice(
+      invoice,
+      customerName.get(invoice.customerId) ?? 'Pelanggan',
+      standardCost,
+    )
     if (entry) entries.push(entry)
   }
 
@@ -332,7 +379,7 @@ export function journalBetween(from: IsoDate, to: IsoDate): JournalEntry[] {
   return buildJournal().filter((entry) => entry.date >= from && entry.date <= to)
 }
 
-/** Jurnal yang lahir dari satu dokumen — dipakai panel "Jurnal Otomatis". */
+/** Jurnal yang lahir dari satu dokumen | dipakai panel "Jurnal Otomatis". */
 export function journalForDocument(documentId: string): JournalEntry[] {
   return buildJournal().filter((entry) => entry.refId === documentId)
 }

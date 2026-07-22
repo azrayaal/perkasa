@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    Lambang Perkasa ERP.
+    Perisai = keandalan pembukuan; profil baja "H" di dalamnya = usaha material
+    konstruksi. Digambar penuh (bukan stroke tipis) supaya tetap terbaca pada
+    ukuran 16px di tab browser.
+  -->
+  <defs>
+    <linearGradient id="perkasa-shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#16273F" />
+      <stop offset="100%" stop-color="#0C1626" />
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="url(#perkasa-shield)" />
+
+  <path
+    d="M32 8 51 14v14.4c0 9.9-7.2 17.6-19 21.6-11.8-4-19-11.7-19-21.6V14L32 8Z"
+    fill="none"
+    stroke="#F5B01A"
+    stroke-width="2.6"
+    stroke-linejoin="round"
+  />
+
+  <!-- Penampang baja profil H -->
+  <path d="M22 19h6v8.6h8V19h6v26h-6v-8.6h-8V45h-6V19Z" fill="#F5B01A" />
+</svg>

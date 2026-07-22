@@ -4,7 +4,7 @@
  * Semua service memanggil `respond()` alih-alih mengembalikan data langsung,
  * supaya kontraknya (async + latency + clone) identik dengan HTTP call.
  *
- * TODO: replace with real API call — ganti isi `respond()` dengan `fetch()`
+ * TODO: replace with real API call | ganti isi `respond()` dengan `fetch()`
  * ke API gateway; signature service di atasnya tidak perlu berubah.
  */
 
@@ -12,7 +12,7 @@
 const MOCK_LATENCY_MS = 220
 
 export function respond<T>(payload: T): Promise<T> {
-  // structuredClone mencegah komponen tidak sengaja memutasi data global —
+  // structuredClone mencegah komponen tidak sengaja memutasi data global |
   // meniru perilaku response HTTP yang selalu objek baru.
   const snapshot = structuredClone(payload)
 

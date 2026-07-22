@@ -1,5 +1,5 @@
 /**
- * Dashboard — ringkasan lintas modul.
+ * Dashboard | ringkasan lintas modul.
  *
  * Tidak ada agregasi baru di sini: setiap angka diambil dari service modulnya
  * masing-masing. Dashboard hanyalah jendela, bukan sumber kebenaran kedua.
@@ -17,12 +17,13 @@ import { addDays, daysBetween } from '@/utils/date'
 import { ROUTE } from '@/router/routeNames'
 import type { DashboardStats, IsoDate, JournalSource, TimelineEntry } from '@/types'
 
-function growth(current: number, previous: number): number {
-  if (previous === 0) return current === 0 ? 0 : 100
+/** `null` kalau periode pembanding kosong | lebih jujur daripada menulis +100%. */
+function growth(current: number, previous: number): number | null {
+  if (previous === 0) return null
   return Number((((current - previous) / previous) * 100).toFixed(1))
 }
 
-/** TODO: replace with real API call — GET /dashboard/stats?from=&to= */
+/** TODO: replace with real API call | GET /dashboard/stats?from=&to= */
 export function getDashboardStats(from: IsoDate, to: IsoDate): Promise<DashboardStats> {
   const income = buildIncomeStatement(from, to)
 
@@ -58,7 +59,7 @@ export function getDashboardStats(from: IsoDate, to: IsoDate): Promise<Dashboard
   })
 }
 
-/** Route tujuan tiap jenis peristiwa — supaya linimasa bisa diklik. */
+/** Route tujuan tiap jenis peristiwa | supaya linimasa bisa diklik. */
 const SOURCE_ROUTE: Record<JournalSource, string | null> = {
   opening: null,
   sales: ROUTE.salesDetail,
@@ -81,10 +82,10 @@ const SOURCE_TITLE: Record<JournalSource, string> = {
 
 /**
  * Linimasa lintas modul: penjualan, pembelian, beban, kas, dan gudang dalam
- * satu aliran. Sumbernya jurnal — jadi tidak mungkin ada transaksi yang
+ * satu aliran. Sumbernya jurnal | jadi tidak mungkin ada transaksi yang
  * tercatat di buku tapi hilang dari linimasa.
  *
- * TODO: replace with real API call — GET /dashboard/timeline
+ * TODO: replace with real API call | GET /dashboard/timeline
  */
 export function getRecentTimeline(limit = 10): Promise<TimelineEntry[]> {
   const entries = buildJournal()
@@ -108,7 +109,7 @@ export function getRecentTimeline(limit = 10): Promise<TimelineEntry[]> {
   return respond(entries)
 }
 
-/** Faktur yang paling mendesak ditagih — kartu "perlu tindak lanjut". */
+/** Faktur yang paling mendesak ditagih | kartu "perlu tindak lanjut". */
 export function getOverdueInvoices(limit = 5): Promise<
   Array<{ id: string; number: string; customerName: string; outstanding: number; overdueDays: number }>
 > {
@@ -128,7 +129,7 @@ export function getOverdueInvoices(limit = 5): Promise<
 }
 
 /**
- * Uji konsistensi lintas modul — ditampilkan di dashboard sebagai bukti bahwa
+ * Uji konsistensi lintas modul | ditampilkan di dashboard sebagai bukti bahwa
  * modul-modulnya benar-benar satu sumber, bukan tiga aplikasi yang ditempel.
  */
 export interface IntegrityCheck {
@@ -141,7 +142,7 @@ export interface IntegrityCheck {
   ledgerLabel: string
 }
 
-/** TODO: replace with real API call — GET /dashboard/integrity */
+/** TODO: replace with real API call | GET /dashboard/integrity */
 export function getIntegrityChecks(asOf: IsoDate = today()): Promise<IntegrityCheck[]> {
   const balances = balancesAsOf(asOf)
   const database = db()
@@ -150,7 +151,11 @@ export function getIntegrityChecks(asOf: IsoDate = today()): Promise<IntegrityCh
 
   const receivableFromInvoices = database.salesInvoices
     .filter((invoice) => invoice.status !== 'draft' && invoice.date <= asOf)
-    .reduce((sum, invoice) => sum + invoice.totals.total - invoice.paidAmount, 0)
+    .reduce(
+      (sum, invoice) =>
+        sum + invoice.totals.total - (invoice.tradeIn?.total ?? 0) - invoice.paidAmount,
+      0,
+    )
 
   const payableFromInvoices = database.purchaseInvoices
     .filter((invoice) => invoice.date <= asOf)

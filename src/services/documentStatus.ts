@@ -1,5 +1,5 @@
 /**
- * Aturan status & umur dokumen — dipakai bersama modul penjualan dan pembelian.
+ * Aturan status & umur dokumen | dipakai bersama modul penjualan dan pembelian.
  *
  * `overdue` sengaja TIDAK disimpan di database: ia selalu dihitung dari tanggal
  * jatuh tempo terhadap tanggal hari ini, supaya tidak ada faktur yang statusnya

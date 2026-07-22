@@ -7,7 +7,7 @@ import vue from '@vitejs/plugin-vue'
  *
  * Beberapa mesin dev kehabisan kuota inotify (`ENOSPC: System limit for number
  * of file watchers reached`) karena dipakai VS Code + ekstensinya. Polling tidak
- * memakai inotify sama sekali, jadi dev server tetap bisa jalan — tapi lebih
+ * memakai inotify sama sekali, jadi dev server tetap bisa jalan | tapi lebih
  * boros CPU/baterai.
  *
  * Solusi permanen yang lebih baik (butuh sudo, sekali saja):

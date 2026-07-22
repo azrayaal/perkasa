@@ -1,13 +1,13 @@
 import type { BadgeStatus } from '@/types'
 
 /**
- * Tone visual badge. Tambah tone baru di sini kalau design system bertambah —
+ * Tone visual badge. Tambah tone baru di sini kalau design system bertambah |
  * bukan menulis kelas Tailwind ad-hoc di komponen.
  */
 export type BadgeTone = 'success' | 'warning' | 'error' | 'neutral' | 'brand' | 'accent' | 'info'
 
 export const BADGE_TONE_CLASS: Record<BadgeTone, string> = {
-  // Pill amber solid dengan teks gelap — sorotan khas palet Perkasa.
+  // Pill amber solid dengan teks gelap | sorotan khas palet Perkasa.
   brand: 'bg-brand text-brand-ink',
   success: 'bg-state-success/12 text-state-success',
   warning: 'bg-state-warning/15 text-state-warning',

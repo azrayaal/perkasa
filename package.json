@@ -1,5 +1,5 @@
 {
-  "name": "ginkgo-living-erp",
+  "name": "perkasa-erp",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -23,5 +23,6 @@
     "typescript": "^5.6.3",
     "vite": "^6.0.5",
     "vue-tsc": "^2.1.10"
-  }
+  },
+  "description": "Perkasa ERP | sistem terpadu penjualan, pembelian, gudang, beban, perpajakan, pembukuan, dan laporan keuangan."
 }
