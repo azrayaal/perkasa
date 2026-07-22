@@ -9,12 +9,19 @@ declare module 'vue-router' {
     /** Role yang boleh mengakses; kosong = halaman publik. */
     roles?: UserRole[]
     title?: string
+    /** Deskripsi singkat di bawah judul halaman. */
+    subtitle?: string
   }
 }
 
+/** Tiga peran yang dipakai berulang; ditulis sekali supaya konsisten. */
+const ALL: UserRole[] = ['direksi', 'akuntan', 'operasional']
+const FINANCE: UserRole[] = ['direksi', 'akuntan']
+const OPERATIONS: UserRole[] = ['direksi', 'akuntan', 'operasional']
+
 const routes: RouteRecordRaw[] = [
   {
-    path: '/login',
+    path: '/masuk',
     name: ROUTE.login,
     component: () => import('@/views/LoginView.vue'),
     meta: { title: 'Masuk' },
@@ -23,77 +30,97 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: ROUTE.dashboard,
     component: () => import('@/views/DashboardView.vue'),
-    meta: { roles: ['admin'], title: 'Dashboard' },
+    meta: { roles: ALL, title: 'Dashboard' },
   },
   {
-    path: '/residents',
-    name: ROUTE.residentList,
-    component: () => import('@/views/ResidentListView.vue'),
-    meta: { roles: ['admin'], title: 'Resident' },
+    path: '/performa',
+    name: ROUTE.performance,
+    component: () => import('@/views/PerformanceView.vue'),
+    meta: { roles: FINANCE, title: 'Performa' },
   },
   {
-    path: '/residents/:id',
-    name: ROUTE.residentDetail,
-    component: () => import('@/views/ResidentDetailView.vue'),
+    path: '/penjualan',
+    name: ROUTE.sales,
+    component: () => import('@/views/SalesView.vue'),
+    meta: { roles: OPERATIONS, title: 'Penjualan' },
+  },
+  {
+    path: '/penjualan/:id',
+    name: ROUTE.salesDetail,
+    component: () => import('@/views/SalesDetailView.vue'),
     // `props: true` menjaga view tetap murni: id datang sebagai prop bertipe.
     props: true,
-    meta: { roles: ['admin'], title: 'Detail Resident' },
+    meta: { roles: OPERATIONS, title: 'Detail Faktur Penjualan' },
   },
   {
-    path: '/units',
-    name: ROUTE.units,
-    component: () => import('@/views/UnitsView.vue'),
-    meta: { roles: ['admin'], title: 'Unit & Properti' },
+    path: '/pembelian',
+    name: ROUTE.purchases,
+    component: () => import('@/views/PurchaseView.vue'),
+    meta: { roles: OPERATIONS, title: 'Pembelian' },
   },
   {
-    path: '/billing',
-    name: ROUTE.billing,
-    component: () => import('@/views/BillingView.vue'),
-    meta: { roles: ['admin'], title: 'Billing' },
+    path: '/pembelian/:id',
+    name: ROUTE.purchaseDetail,
+    component: () => import('@/views/PurchaseDetailView.vue'),
+    props: true,
+    meta: { roles: OPERATIONS, title: 'Detail Faktur Pembelian' },
   },
   {
-    path: '/health',
-    name: ROUTE.health,
-    component: () => import('@/views/HealthView.vue'),
-    meta: { roles: ['admin'], title: 'Kesehatan' },
+    path: '/gudang',
+    name: ROUTE.inventory,
+    component: () => import('@/views/InventoryView.vue'),
+    meta: { roles: OPERATIONS, title: 'Gudang & Persediaan' },
   },
   {
-    path: '/activities',
-    name: ROUTE.activities,
-    component: () => import('@/views/ActivitiesView.vue'),
-    meta: { roles: ['admin'], title: 'Aktivitas' },
+    path: '/beban',
+    name: ROUTE.expenses,
+    component: () => import('@/views/ExpenseView.vue'),
+    meta: { roles: FINANCE, title: 'Beban Operasional' },
   },
   {
-    path: '/family-access',
-    name: ROUTE.familyAccess,
-    component: () => import('@/views/FamilyAccessView.vue'),
-    meta: { roles: ['admin'], title: 'Akses Keluarga' },
+    path: '/perpajakan',
+    name: ROUTE.tax,
+    component: () => import('@/views/TaxView.vue'),
+    meta: { roles: FINANCE, title: 'Perpajakan' },
   },
   {
-    path: '/my-portal',
-    name: ROUTE.myPortal,
-    component: () => import('@/views/MyPortalView.vue'),
-    meta: { roles: ['resident'], title: 'Portal Saya' },
+    path: '/pembukuan',
+    name: ROUTE.journal,
+    component: () => import('@/views/JournalView.vue'),
+    meta: { roles: FINANCE, title: 'Pembukuan' },
   },
   {
-    path: '/family-portal',
-    name: ROUTE.familyPortal,
-    component: () => import('@/views/FamilyPortalView.vue'),
-    meta: { roles: ['family', 'admin'], title: 'Family Portal' },
+    path: '/neraca',
+    name: ROUTE.balanceSheet,
+    component: () => import('@/views/BalanceSheetView.vue'),
+    meta: { roles: FINANCE, title: 'Neraca' },
   },
   {
-    path: '/settings',
+    path: '/laporan-keuangan',
+    name: ROUTE.financialReports,
+    component: () => import('@/views/FinancialReportsView.vue'),
+    meta: { roles: FINANCE, title: 'Laporan Keuangan' },
+  },
+  {
+    path: '/master-data',
+    name: ROUTE.master,
+    component: () => import('@/views/MasterDataView.vue'),
+    meta: { roles: ALL, title: 'Master Data' },
+  },
+  {
+    path: '/pengaturan',
     name: ROUTE.settings,
     component: () => import('@/views/SettingsView.vue'),
-    meta: { roles: ['admin', 'resident', 'family'], title: 'Pengaturan' },
+    meta: { roles: ALL, title: 'Pengaturan' },
   },
-  // EXTENSION POINT: tambah modul baru di sini (mis. /care-plan, /staff, /reports).
+  // EXTENSION POINT: tambah modul baru di sini (mis. /produksi, /aset-tetap).
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 
 export const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior: () => ({ top: 0 }),
 })
 
 /**
@@ -118,9 +145,7 @@ router.beforeEach((to) => {
 })
 
 router.afterEach((to) => {
-  document.title = to.meta.title
-    ? `${to.meta.title} · Ginkgo Living ERP`
-    : 'Ginkgo Living ERP'
+  document.title = to.meta.title ? `${to.meta.title} · Perkasa ERP` : 'Perkasa ERP'
 })
 
 export default router

@@ -1,9 +1,10 @@
 /**
  * Database lokal untuk POC.
  *
- * Menggantikan array mock read-only supaya aksi (bayar invoice, tambah catatan
- * EHR, booking aktivitas, dll) benar-benar mengubah data dan bertahan setelah
- * halaman di-reload.
+ * Menyimpan HANYA fakta yang dicatat manusia: master data dan dokumen
+ * transaksi. Jurnal, buku besar, neraca, dan laporan keuangan TIDAK disimpan —
+ * semuanya dihitung ulang dari dokumen di `services/postingService.ts`. Itulah
+ * yang membuat modul-modulnya mustahil "berbeda angka".
  *
  * HANYA boleh diimport oleh folder `services/`.
  *
@@ -11,36 +12,59 @@
  * seluruh operasi tulis pindah ke server.
  */
 import {
-  activities as seedActivities,
-  billing as seedBilling,
-  ehr as seedEhr,
-  familyMembers as seedFamilyMembers,
-  residents as seedResidents,
-  units as seedUnits,
+  company as seedCompany,
+  customers as seedCustomers,
+  generateSeed,
+  products as seedProducts,
+  suppliers as seedSuppliers,
+  warehouses as seedWarehouses,
 } from '@/data/mockData'
-import type { Activity, Billing, Ehr, FamilyMember, Resident, Unit } from '@/types'
+import type {
+  CompanyProfile,
+  Customer,
+  Expense,
+  ManualJournal,
+  OpeningBalance,
+  Payment,
+  Product,
+  PurchaseInvoice,
+  SalesInvoice,
+  StockAdjustment,
+  StockMove,
+  Supplier,
+  Warehouse,
+} from '@/types'
 
 export interface Database {
-  residents: Resident[]
-  units: Unit[]
-  familyMembers: FamilyMember[]
-  billing: Billing[]
-  ehr: Ehr[]
-  activities: Activity[]
+  company: CompanyProfile
+  customers: Customer[]
+  suppliers: Supplier[]
+  products: Product[]
+  warehouses: Warehouse[]
+  openingBalances: OpeningBalance[]
+  openingStockMoves: StockMove[]
+  salesInvoices: SalesInvoice[]
+  purchaseInvoices: PurchaseInvoice[]
+  expenses: Expense[]
+  payments: Payment[]
+  stockAdjustments: StockAdjustment[]
+  manualJournals: ManualJournal[]
 }
 
-/** Versi ikut dinaikkan kalau bentuk data berubah, supaya seed lama dibuang. */
-const STORAGE_KEY = 'ginkgo-living.db.v1'
+/** Versi dinaikkan setiap bentuk data berubah, supaya seed lama dibuang. */
+const STORAGE_KEY = 'perkasa-erp.db.v1'
 
 function seed(): Database {
-  return structuredClone({
-    residents: seedResidents,
-    units: seedUnits,
-    familyMembers: seedFamilyMembers,
-    billing: seedBilling,
-    ehr: seedEhr,
-    activities: seedActivities,
-  })
+  const generated = generateSeed()
+
+  return {
+    company: structuredClone(seedCompany),
+    customers: structuredClone(seedCustomers),
+    suppliers: structuredClone(seedSuppliers),
+    products: structuredClone(seedProducts),
+    warehouses: structuredClone(seedWarehouses),
+    ...generated,
+  }
 }
 
 let cache: Database | null = null
@@ -87,9 +111,9 @@ export function resetDatabase(): void {
 }
 
 /**
- * Generator id berurutan, mis. `nextId('INV', 4)` -> "INV-0004".
- * Deterministik supaya hasilnya enak dibaca di demo.
+ * Nomor dokumen berikutnya, mis. `nextNumber('INV', 128)` -> "INV-2026-0129".
+ * Deterministik supaya hasilnya enak dibaca saat demo.
  */
-export function nextId(prefix: string, existingCount: number, pad = 3): string {
-  return `${prefix}-${String(existingCount + 1).padStart(pad, '0')}`
+export function nextNumber(prefix: string, existingCount: number): string {
+  return `${prefix}-${db().company.fiscalYear}-${String(existingCount + 1).padStart(4, '0')}`
 }

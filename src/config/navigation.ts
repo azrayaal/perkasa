@@ -15,57 +15,73 @@ export interface NavSection {
   items: NavItem[]
 }
 
+const ALL: UserRole[] = ['direksi', 'akuntan', 'operasional']
+const FINANCE: UserRole[] = ['direksi', 'akuntan']
+
 /**
  * Sumber tunggal struktur sidebar.
+ *
+ * Urutannya sengaja mengikuti alur uang di perusahaan dagang:
+ * transaksi harian (penjualan → pembelian → gudang) menghasilkan catatan
+ * keuangan (beban → pajak → pembukuan), yang bermuara pada laporan
+ * (neraca → laporan keuangan).
+ *
  * EXTENSION POINT: tambah modul baru di sini — daftarkan route-nya di
  * `router/index.ts` dengan `meta.roles` yang sama, lalu menunya otomatis muncul
  * untuk role yang berhak.
  */
 export const NAV_SECTIONS: NavSection[] = [
   {
+    title: 'Ikhtisar',
+    items: [
+      { name: ROUTE.dashboard, label: 'Dashboard', icon: 'dashboard', roles: ALL },
+      { name: ROUTE.performance, label: 'Performa', icon: 'performance', roles: FINANCE },
+    ],
+  },
+  {
     title: 'Operasional',
     items: [
-      { name: ROUTE.dashboard, label: 'Dashboard', icon: 'dashboard', roles: ['admin'] },
-      { name: ROUTE.residentList, label: 'Resident', icon: 'residents', roles: ['admin'] },
-      { name: ROUTE.units, label: 'Unit & Properti', icon: 'unit', roles: ['admin'] },
+      { name: ROUTE.sales, label: 'Penjualan', icon: 'sales', roles: ALL },
+      { name: ROUTE.purchases, label: 'Pembelian', icon: 'purchase', roles: ALL },
+      { name: ROUTE.inventory, label: 'Gudang', icon: 'warehouse', roles: ALL },
     ],
   },
   {
-    title: 'Layanan',
+    title: 'Keuangan',
     items: [
-      { name: ROUTE.billing, label: 'Billing', icon: 'billing', roles: ['admin'] },
-      { name: ROUTE.health, label: 'Kesehatan', icon: 'health', roles: ['admin'] },
-      { name: ROUTE.activities, label: 'Aktivitas', icon: 'activity', roles: ['admin'] },
-      { name: ROUTE.familyAccess, label: 'Akses Keluarga', icon: 'family', roles: ['admin'] },
+      { name: ROUTE.expenses, label: 'Beban', icon: 'expense', roles: FINANCE },
+      { name: ROUTE.tax, label: 'Perpajakan', icon: 'tax', roles: FINANCE },
+      { name: ROUTE.journal, label: 'Pembukuan', icon: 'journal', roles: FINANCE },
     ],
   },
   {
-    title: 'Portal',
+    title: 'Laporan',
     items: [
-      { name: ROUTE.myPortal, label: 'Portal Saya', icon: 'user', roles: ['resident'] },
-      // Ikon sengaja dibedakan dari "Akses Keluarga": di rail ikon, dua menu
-      // admin dengan gambar orang yang mirip mustahil dibedakan sekilas.
-      { name: ROUTE.familyPortal, label: 'Family Portal', icon: 'user', roles: ['family', 'admin'] },
+      { name: ROUTE.balanceSheet, label: 'Neraca', icon: 'balance', roles: FINANCE },
+      { name: ROUTE.financialReports, label: 'Laporan Keuangan', icon: 'report', roles: FINANCE },
     ],
   },
   {
     title: 'Sistem',
-    items: [{ name: ROUTE.settings, label: 'Pengaturan', icon: 'settings', roles: ['admin', 'resident', 'family'] }],
+    items: [
+      { name: ROUTE.master, label: 'Master Data', icon: 'master', roles: ALL },
+      { name: ROUTE.settings, label: 'Pengaturan', icon: 'settings', roles: ALL },
+    ],
   },
 ]
 
 /** Halaman awal tiap role setelah login. */
 export const ROLE_HOME: Record<UserRole, RouteName> = {
-  admin: ROUTE.dashboard,
-  resident: ROUTE.myPortal,
-  family: ROUTE.familyPortal,
+  direksi: ROUTE.dashboard,
+  akuntan: ROUTE.dashboard,
+  operasional: ROUTE.sales,
 }
 
 /** Label role untuk ditampilkan di UI. */
 export const ROLE_LABEL: Record<UserRole, string> = {
-  admin: 'Staf Ginkgo',
-  resident: 'Penghuni',
-  family: 'Keluarga',
+  direksi: 'Direksi',
+  akuntan: 'Akuntan',
+  operasional: 'Operasional',
 }
 
 /** Sidebar hanya menampilkan section yang punya minimal satu menu untuk role ini. */

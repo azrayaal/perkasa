@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { login as loginRequest, logout as logoutRequest } from '@/services/authService'
 import type { AuthUser, LoginPayload, UserRole } from '@/types'
 
-const SESSION_KEY = 'ginkgo-living.session.v1'
+const SESSION_KEY = 'perkasa-erp.session.v1'
 
 function readSession(): AuthUser | null {
   try {
@@ -37,8 +37,8 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => user.value !== null)
   const role = computed<UserRole | null>(() => user.value?.role ?? null)
 
-  /** Resident yang boleh dilihat user ini; `null` untuk admin (boleh semua). */
-  const scopedResidentId = computed(() => user.value?.residentId ?? null)
+  /** Peran keuangan boleh melihat laporan & menulis jurnal. */
+  const canAccessFinance = computed(() => role.value === 'direksi' || role.value === 'akuntan')
 
   async function signIn(payload: LoginPayload): Promise<boolean> {
     loading.value = true
@@ -64,5 +64,5 @@ export const useAuthStore = defineStore('auth', () => {
     writeSession(null)
   }
 
-  return { user, loading, error, isAuthenticated, role, scopedResidentId, signIn, signOut }
+  return { user, loading, error, isAuthenticated, role, canAccessFinance, signIn, signOut }
 })

@@ -4,66 +4,79 @@ import type { BadgeStatus } from '@/types'
  * Tone visual badge. Tambah tone baru di sini kalau design system bertambah —
  * bukan menulis kelas Tailwind ad-hoc di komponen.
  */
-export type BadgeTone = 'success' | 'warning' | 'error' | 'neutral' | 'brand' | 'accent'
+export type BadgeTone = 'success' | 'warning' | 'error' | 'neutral' | 'brand' | 'accent' | 'info'
 
 export const BADGE_TONE_CLASS: Record<BadgeTone, string> = {
-  // Pill lime solid dengan teks gelap — bentuk khas palet referensi.
-  success: 'bg-brand text-brand-ink',
+  // Pill amber solid dengan teks gelap — sorotan khas palet Perkasa.
+  brand: 'bg-brand text-brand-ink',
+  success: 'bg-state-success/12 text-state-success',
   warning: 'bg-state-warning/15 text-state-warning',
   error: 'bg-state-error/10 text-state-error',
+  info: 'bg-state-info/10 text-state-info',
   neutral: 'bg-surface-alt text-ink-secondary',
-  brand: 'bg-ink-strong text-page',
-  accent: 'bg-ink-strong/[0.07] text-ink-primary',
+  accent: 'bg-ink-strong text-page',
 }
 
 /**
  * Config-driven mapping status -> tone.
- * `Record<BadgeStatus, BadgeTone>` bersifat exhaustive: menambah status baru di
- * `types/index.ts` akan gagal compile sampai warnanya didefinisikan di sini.
+ * `Record<BadgeStatus, BadgeTone>` bersifat exhaustive: menambah status baru
+ * di `types/index.ts` akan gagal compile sampai warnanya didefinisikan di sini.
  */
 const STATUS_TONE: Record<BadgeStatus, BadgeTone> = {
-  // Resident
+  // Dokumen transaksi
+  draft: 'neutral',
+  posted: 'info',
+  partial: 'warning',
+  paid: 'success',
+  overdue: 'error',
+  // Persediaan
+  'in-stock': 'success',
+  'low-stock': 'warning',
+  'out-of-stock': 'error',
+  // Mitra & master data
   active: 'success',
   inactive: 'neutral',
-  pending: 'warning',
-  // Unit
-  occupied: 'brand',
-  vacant: 'neutral',
-  booked: 'warning',
-  maintenance: 'warning',
-  // Billing
-  paid: 'success',
-  unpaid: 'warning',
-  overdue: 'error',
-  // Activity
-  attended: 'success',
-  cancelled: 'error',
-  // Membership tier
-  Premium: 'accent',
-  Standard: 'neutral',
-  // Ringkasan kesehatan (family view)
-  stable: 'success',
-  'needs-attention': 'warning',
+  // Status SPT
+  'kurang-bayar': 'warning',
+  'lebih-bayar': 'info',
+  nihil: 'neutral',
+  // Sumber jurnal
+  opening: 'neutral',
+  sales: 'brand',
+  purchase: 'accent',
+  expense: 'warning',
+  payment: 'info',
+  inventory: 'neutral',
+  manual: 'neutral',
+  // Uji keseimbangan pembukuan
+  balanced: 'success',
+  unbalanced: 'error',
 }
 
 /** Label yang ditampilkan ke user (bahasa Indonesia, Title Case). */
 const STATUS_LABEL: Record<BadgeStatus, string> = {
+  draft: 'Draft',
+  posted: 'Terposting',
+  partial: 'Dibayar Sebagian',
+  paid: 'Lunas',
+  overdue: 'Jatuh Tempo',
+  'in-stock': 'Stok Aman',
+  'low-stock': 'Stok Menipis',
+  'out-of-stock': 'Stok Habis',
   active: 'Aktif',
   inactive: 'Non-aktif',
-  pending: 'Menunggu',
-  occupied: 'Terisi',
-  vacant: 'Kosong',
-  booked: 'Dipesan',
-  maintenance: 'Perawatan',
-  paid: 'Lunas',
-  unpaid: 'Belum Bayar',
-  overdue: 'Terlambat',
-  attended: 'Hadir',
-  cancelled: 'Dibatalkan',
-  Premium: 'Premium',
-  Standard: 'Standard',
-  stable: 'Kondisi Stabil',
-  'needs-attention': 'Perlu Perhatian',
+  'kurang-bayar': 'Kurang Bayar',
+  'lebih-bayar': 'Lebih Bayar',
+  nihil: 'Nihil',
+  opening: 'Saldo Awal',
+  sales: 'Penjualan',
+  purchase: 'Pembelian',
+  expense: 'Beban',
+  payment: 'Kas & Bank',
+  inventory: 'Gudang',
+  manual: 'Jurnal Manual',
+  balanced: 'Seimbang',
+  unbalanced: 'Tidak Seimbang',
 }
 
 export function statusBadgeTone(status: BadgeStatus): BadgeTone {
