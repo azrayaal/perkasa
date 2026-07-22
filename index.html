@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perkasa ERP | Sistem Terpadu Dagang & Keuangan</title>
+    <meta
+      name="description"
+      content="Perkasa ERP — penjualan, pembelian, gudang, beban, perpajakan, pembukuan, dan laporan keuangan dalam satu sumber data."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Terapkan tema sebelum paint pertama supaya tidak ada kedipan warna.
+      // Default aplikasi adalah LIGHT; dark hanya aktif kalau user memilihnya.
+      ;(() => {
+        try {
+          const dark = localStorage.getItem('perkasa-erp.theme.v1') === 'dark'
+          document.documentElement.classList.toggle('dark', dark)
+        } catch {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

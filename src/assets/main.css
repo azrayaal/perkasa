@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Token warna (channel RGB, tanpa `rgb()` supaya Tailwind bisa menyisipkan alpha).
+ * Light mode = default; dark mode = kelas `.dark` di <html>.
+ *
+ * Palet Perkasa: navy industri sebagai warna aksi & sidebar, AMBER sebagai
+ * aksen sorotan (nav aktif, pill status, angka penting). Amber tidak pernah
+ * menjadi latar teks putih — kontrasnya gagal; teks di atas amber selalu gelap.
+ */
+@layer base {
+  :root {
+    --brand: 245 176 26; /* #F5B01A — amber sorotan */
+    --brand-hover: 232 163 16;
+    --brand-ink: 39 28 4; /* teks/ikon di atas amber */
+
+    /* Warna aksi utama: tombol primer, chip solid, sidebar. */
+    --ink-strong: 15 27 45; /* #0F1B2D navy tua */
+    --ink-primary: 17 25 38;
+    --ink-secondary: 100 116 139;
+    --ink-muted: 148 163 184;
+
+    --page: 249 250 251;
+    --surface: 255 255 255;
+    --surface-alt: 243 245 248;
+    --line: 226 232 240;
+
+    --success: 22 163 74;
+    --warning: 217 119 6;
+    --error: 220 38 38;
+    --info: 37 99 235;
+
+    /*
+     * Palet grafik — urutan tetap: 1 pendapatan, 2 beban/HPP, 3 laba.
+     * Nilainya lolos uji keterbacaan buta warna (protan/deutan/tritan ΔE ≥ 8)
+     * dan kontras ≥ 3:1 terhadap latar kartu. Jangan menukar urutannya:
+     * warna mengikuti ENTITAS, bukan peringkat, supaya filter tidak mengecat
+     * ulang seri yang tersisa. Langkah dark mode dipilih terpisah di `.dark`,
+     * bukan hasil pembalikan otomatis.
+     */
+    --chart-1: 37 99 235;
+    --chart-2: 217 119 6;
+    --chart-3: 13 148 136;
+
+    /*
+     * Sidebar punya set token sendiri karena selalu gelap — termasuk saat
+     * halaman dalam mode terang. Warnanya tidak boleh ikut token halaman,
+     * kalau tidak ikonnya jadi tak terbaca di light mode.
+     */
+    --sidebar: 12 22 38; /* #0C1626 */
+    --sidebar-line: 30 45 68;
+    --sidebar-ink: 141 158 181;
+    --sidebar-ink-strong: 241 245 249;
+  }
+
+  .dark {
+    --ink-strong: 232 238 245;
+    --ink-primary: 232 238 245;
+    --ink-secondary: 148 163 184;
+    --ink-muted: 107 121 140;
+
+    --page: 11 16 24;
+    --surface: 18 25 36;
+    --surface-alt: 26 34 47;
+    --line: 39 50 66;
+
+    --success: 74 222 128;
+    --warning: 251 191 36;
+    --error: 248 113 113;
+    --info: 96 165 250;
+
+    --sidebar: 9 14 23;
+    --sidebar-line: 30 42 60;
+
+    /* Langkah grafik untuk latar gelap — divalidasi ulang, bukan dibalik. */
+    --chart-1: 59 130 246;
+    --chart-2: 196 127 14;
+    --chart-3: 15 163 150;
+  }
+
+  html {
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+
+  body {
+    @apply bg-page text-body text-ink-primary antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-ink-primary;
+  }
+}
+
+@layer components {
+  /** Identifier teknis (nomor faktur, kode akun, SKU) dirender monospace. */
+  .identifier {
+    @apply font-mono text-code text-ink-secondary;
+  }
+
+  /**
+   * Angka uang di tabel & laporan: monospace dengan lebar digit tetap supaya
+   * kolom rupiah rata dan mudah dibandingkan sekilas — syarat mutlak laporan
+   * keuangan.
+   */
+  .amount {
+    @apply font-mono tabular-nums;
+  }
+}

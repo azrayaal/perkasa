@@ -15,7 +15,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        /** Lime aksen: nav aktif, pill status, sorotan. Teks di atasnya selalu gelap. */
+        /** Amber aksen: nav aktif, pill status, sorotan. Teks di atasnya selalu gelap. */
         brand: {
           DEFAULT: token('brand'),
           hover: token('brand-hover'),
@@ -40,6 +40,12 @@ export default {
           ink: token('sidebar-ink'),
           'ink-strong': token('sidebar-ink-strong'),
         },
+        /** Seri grafik; urutannya tetap dan tidak boleh dirotasi. */
+        chart: {
+          1: token('chart-1'),
+          2: token('chart-2'),
+          3: token('chart-3'),
+        },
         state: {
           success: token('success'),
           warning: token('warning'),
@@ -56,8 +62,8 @@ export default {
         h2: ['24px', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '700' }],
         h3: ['18px', { lineHeight: '1.4', fontWeight: '600' }],
         h4: ['15px', { lineHeight: '1.5', fontWeight: '600' }],
-        /** Angka besar pada kartu statistik; 26px agar nominal rupiah muat 4 kolom. */
-        metric: ['26px', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }],
+        /** Angka besar pada kartu statistik; 24px agar nominal miliaran muat 4 kolom. */
+        metric: ['24px', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }],
         body: ['15px', { lineHeight: '1.6' }],
         small: ['13px', { lineHeight: '1.5' }],
         code: ['13px', { lineHeight: '1.6' }],
