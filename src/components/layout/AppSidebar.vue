@@ -15,7 +15,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   close: []
   signOut: []
-  toggleCollapse: []
 }>()
 
 const auth = useAuthStore()
@@ -136,18 +135,6 @@ const tooltipClass = computed(() => (props.collapsed ? 'lg:block' : 'lg:hidden')
       >
         <BaseIcon name="logout" :size="19" />
         <span :class="labelClass">Keluar</span>
-      </button>
-
-      <!-- Ciutkan/lebarkan hanya relevan di desktop; mobile memakai drawer. -->
-      <button
-        type="button"
-        class="mt-1 hidden h-11 w-full items-center gap-3 rounded-control px-3 text-small font-medium text-sidebar-ink transition-colors hover:bg-white/5 hover:text-sidebar-ink-strong lg:flex"
-        :class="collapsed ? 'lg:w-11 lg:justify-center lg:px-0' : ''"
-        :aria-label="collapsed ? 'Lebarkan menu' : 'Ciutkan menu'"
-        @click="emit('toggleCollapse')"
-      >
-        <BaseIcon :name="collapsed ? 'expand' : 'collapse'" :size="19" />
-        <span :class="labelClass">Ciutkan menu</span>
       </button>
     </footer>
   </aside>

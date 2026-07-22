@@ -64,11 +64,15 @@ async function handleSignOut(): Promise<void> {
         :collapsed="sidebarCollapsed"
         @close="sidebarOpen = false"
         @sign-out="handleSignOut"
-        @toggle-collapse="toggleCollapse"
       />
 
       <div class="transition-[padding] duration-200" :class="sidebarCollapsed ? 'lg:pl-rail' : 'lg:pl-sidebar'">
-        <AppTopbar :title="pageTitle" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+        <AppTopbar
+          :title="pageTitle"
+          :sidebar-collapsed="sidebarCollapsed"
+          @toggle-sidebar="sidebarOpen = !sidebarOpen"
+          @toggle-collapse="toggleCollapse"
+        />
 
         <!-- Lebar dashboard maksimal 1440px sesuai design system. -->
         <main class="mx-auto w-full max-w-dashboard px-4 py-6 sm:px-6">
