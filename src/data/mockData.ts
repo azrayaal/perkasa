@@ -29,6 +29,9 @@ import type {
   ManualJournal,
   OpeningBalance,
   Payment,
+  PosPaymentMethod,
+  PosShift,
+  PosTransaction,
   Product,
   PurchaseInvoice,
   SalesInvoice,
@@ -38,6 +41,7 @@ import type {
   Warehouse,
   WithholdingType,
 } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 /* -------------------------------------------------------------------------- */
 /* Konstanta periode                                                           */
@@ -94,6 +98,20 @@ export const authAccounts: AuthAccount[] = [
     role: 'operasional',
     title: 'Supervisor Penjualan & Gudang',
   },
+  {
+    id: 'USR-04',
+    name: 'Sinta Lestari',
+    email: 'kasir@perkasagemilang.co.id',
+    password: 'perkasa123',
+    role: 'kasir',
+    title: 'Kasir Konter Cikarang',
+  },
+]
+
+/** Kasir yang bertugas bergantian di konter gudang pusat. */
+const CASHIERS = [
+  { id: 'USR-04', name: 'Sinta Lestari' },
+  { id: 'USR-05', name: 'Doni Kurniawan' },
 ]
 
 /* -------------------------------------------------------------------------- */
@@ -110,10 +128,10 @@ export const customers: Customer[] = [
   { id: 'CUS-01', code: 'PLG-001', name: 'PT Griya Karya Mandiri', npwp: '02.111.222.3-407.000', city: 'Bekasi', contact: 'Yusuf Maulana', phone: '0811-1900-221', paymentTermDays: 30, creditLimit: 900_000_000, status: 'active' },
   { id: 'CUS-02', code: 'PLG-002', name: 'CV Bangun Sejahtera Abadi', npwp: '02.333.444.5-407.000', city: 'Karawang', contact: 'Siti Rahmawati', phone: '0812-8877-110', paymentTermDays: 30, creditLimit: 650_000_000, status: 'active' },
   { id: 'CUS-03', code: 'PLG-003', name: 'PT Nusa Konstruksi Perkasa', npwp: '02.555.666.7-054.000', city: 'Jakarta Timur', contact: 'Bambang Hartono', phone: '0813-2211-908', paymentTermDays: 45, creditLimit: 1_200_000_000, status: 'active' },
-  { id: 'CUS-04', code: 'PLG-004', name: 'Toko Material Jaya Abadi', npwp: '|', city: 'Bekasi', contact: 'Hendrik Tanujaya', phone: '0815-6677-441', paymentTermDays: 14, creditLimit: 250_000_000, status: 'active' },
+  { id: 'CUS-04', code: 'PLG-004', name: 'Toko Material Jaya Abadi', npwp: EMPTY, city: 'Bekasi', contact: 'Hendrik Tanujaya', phone: '0815-6677-441', paymentTermDays: 14, creditLimit: 250_000_000, status: 'active' },
   { id: 'CUS-05', code: 'PLG-005', name: 'PT Wijaya Property Group', npwp: '02.777.888.9-411.000', city: 'Tangerang', contact: 'Lina Kurniawati', phone: '0816-4433-227', paymentTermDays: 45, creditLimit: 1_000_000_000, status: 'active' },
   { id: 'CUS-06', code: 'PLG-006', name: 'CV Anugerah Beton Sentosa', npwp: '02.999.111.2-407.000', city: 'Cikarang', contact: 'Rizal Fahmi', phone: '0817-9090-334', paymentTermDays: 30, creditLimit: 500_000_000, status: 'active' },
-  { id: 'CUS-07', code: 'PLG-007', name: 'Toko Bangunan Sinar Terang', npwp: '|', city: 'Depok', contact: 'Mega Puspita', phone: '0818-5544-102', paymentTermDays: 14, creditLimit: 180_000_000, status: 'active' },
+  { id: 'CUS-07', code: 'PLG-007', name: 'Toko Bangunan Sinar Terang', npwp: EMPTY, city: 'Depok', contact: 'Mega Puspita', phone: '0818-5544-102', paymentTermDays: 14, creditLimit: 180_000_000, status: 'active' },
   { id: 'CUS-08', code: 'PLG-008', name: 'PT Karya Bumi Selaras', npwp: '02.121.343.5-054.000', city: 'Jakarta Selatan', contact: 'Andre Firmansyah', phone: '0819-3322-778', paymentTermDays: 45, creditLimit: 800_000_000, status: 'inactive' },
   // Pembeli barang bekas hasil tukar tambah; membayar cepat dan tunai.
   { id: 'CUS-09', code: 'PLG-009', name: 'PT Logam Jaya Peleburan', npwp: '02.454.676.8-433.000', city: 'Cikande, Serang', contact: 'Surya Wijanarko', phone: '0254-771-330', paymentTermDays: 7, creditLimit: 400_000_000, status: 'active' },
@@ -125,7 +143,7 @@ export const suppliers: Supplier[] = [
   { id: 'SUP-03', code: 'PMS-003', name: 'PT Baja Ringan Indoprima', npwp: '03.333.777.9-407.000', city: 'Bekasi', contact: 'Doni Prasetyo', phone: '021-8871-559', paymentTermDays: 21, status: 'active' },
   { id: 'SUP-04', code: 'PMS-004', name: 'PT Cipta Kimia Warna', npwp: '03.444.888.1-411.000', city: 'Tangerang', contact: 'Ira Susanti', phone: '021-5590-338', paymentTermDays: 30, status: 'active' },
   { id: 'SUP-05', code: 'PMS-005', name: 'CV Sumber Panel & Pipa', npwp: '03.555.999.2-407.000', city: 'Bekasi', contact: 'Teguh Santoso', phone: '021-8842-107', paymentTermDays: 21, status: 'active' },
-  { id: 'SUP-06', code: 'PMS-006', name: 'CV Agregat Mandiri Jaya', npwp: '|', city: 'Karawang', contact: 'Sukarno Adi', phone: '0267-441-909', paymentTermDays: 14, status: 'active' },
+  { id: 'SUP-06', code: 'PMS-006', name: 'CV Agregat Mandiri Jaya', npwp: EMPTY, city: 'Karawang', contact: 'Sukarno Adi', phone: '0267-441-909', paymentTermDays: 14, status: 'active' },
 ]
 
 /**
@@ -265,6 +283,8 @@ export interface SeedData {
   payments: Payment[]
   stockAdjustments: StockAdjustment[]
   manualJournals: ManualJournal[]
+  posShifts: PosShift[]
+  posTransactions: PosTransaction[]
 }
 
 /** Kunci stok: produk per gudang. */
@@ -307,8 +327,12 @@ export function generateSeed(): SeedData {
   const payments: Payment[] = []
   const stockAdjustments: StockAdjustment[] = []
   const manualJournals: ManualJournal[] = []
+  const posShifts: PosShift[] = []
+  const posTransactions: PosTransaction[] = []
 
   let salesSeq = 0
+  let shiftSeq = 0
+  let posSeq = 0
   let purchaseSeq = 0
   let expenseSeq = 0
   let adjustmentSeq = 0
@@ -383,7 +407,7 @@ export function generateSeed(): SeedData {
       const dpp = qty * unitValue
       // Hanya pelanggan ber-NPWP yang bisa menerbitkan faktur pajak atas
       // penyerahan barang bekasnya.
-      const vatable = customer.npwp !== '|'
+      const vatable = customer.npwp !== EMPTY
       const ppn = vatable ? Math.round((dpp * VAT_RATE) / 100) : 0
 
       if (qty >= seed.lot && dpp + ppn < totals.total) {
@@ -466,6 +490,202 @@ export function generateSeed(): SeedData {
   }
 
   /* ---------------------------------------------------------------------- */
+  /* POS | konter gudang pusat                                               */
+  /* ---------------------------------------------------------------------- */
+
+  /** Konter melayani pembeli eceran; nilainya jauh lebih kecil dari faktur B2B. */
+  const WALK_IN_NAMES = [
+    'Pak Sugeng',
+    'Bu Hartini',
+    'Pak Joko',
+    'Tukang Bangunan Rusdi',
+    'CV Karya Mandiri Kecil',
+    'Pak Ade',
+    'Bu Yuni',
+    'Mandor Salim',
+    'Pak Toni',
+    'Pembeli konter',
+  ]
+
+  const COUNTER_WAREHOUSE = warehouses[0]
+  const MDR_RATE: Record<PosPaymentMethod, number> = { tunai: 0, qris: 0.7, debit: 0.15 }
+
+  /** Jam sibuk konter material: pagi sebelum kerja dan siang menjelang pulang. */
+  function counterTime(index: number): string {
+    const hour = 8 + Math.floor(random() * 9)
+    const minute = Math.floor(random() * 60)
+    return `${String(hour).padStart(2, '0')}:${String(minute + (index % 2)).padStart(2, '0')}`
+  }
+
+  function createPosSale(shift: PosShift, time: string): void {
+    const lineCount = 1 + Math.floor(random() * 3)
+    const chosen = new Set<string>()
+    const lines: DocumentLine[] = []
+    let cogs = 0
+
+    for (let index = 0; index < lineCount; index += 1) {
+      const seed = pick(REGULAR_SEEDS)
+      if (chosen.has(seed.id)) continue
+      chosen.add(seed.id)
+
+      const available = stock.get(stockKey(seed.id, COUNTER_WAREHOUSE.id)) ?? 0
+      // Pembeli eceran mengambil satuan kecil, bukan kelipatan lot proyek.
+      const qty = Math.max(1, Math.round(between(1, Math.max(2, seed.lot / 2))))
+      if (qty > available) continue
+
+      lines.push({ productId: seed.id, qty, unitPrice: seed.price, discountPercent: 0 })
+      cogs += qty * seed.cost
+      stock.set(stockKey(seed.id, COUNTER_WAREHOUSE.id), available - qty)
+    }
+
+    if (lines.length === 0) return
+
+    const totals = calcTotals(lines, VAT_RATE)
+
+    // Tukar tambah di konter jarang, dan pembeli eceran hampir selalu non-PKP.
+    let tradeIn: PosTransaction['tradeIn'] = null
+    if (totals.total > 2_000_000 && random() < 0.08) {
+      const seed = pick(SCRAP_SEEDS)
+      const unitValue = roundTo(seed.cost * between(0.85, 1.15), 100)
+      const qty = Math.max(seed.lot, roundTo((totals.total * 0.2) / unitValue, seed.lot))
+      const dpp = qty * unitValue
+
+      if (dpp < totals.total) {
+        tradeIn = { lines: [{ productId: seed.id, qty, unitValue }], warehouseId: COUNTER_WAREHOUSE.id, dpp, ppn: 0, total: dpp, taxInvoiceNumber: null }
+        const key = stockKey(seed.id, COUNTER_WAREHOUSE.id)
+        stock.set(key, (stock.get(key) ?? 0) + qty)
+      }
+    }
+
+    const netDue = totals.total - (tradeIn?.total ?? 0)
+    const dice = random()
+    const method: PosPaymentMethod = dice < 0.62 ? 'tunai' : dice < 0.88 ? 'qris' : 'debit'
+
+    // Pembeli tunai membayar dengan pecahan bulat, lalu menerima kembalian.
+    const cashTendered = method === 'tunai' ? Math.ceil(netDue / 50_000) * 50_000 : 0
+
+    posSeq += 1
+    posTransactions.push({
+      id: `POS-${String(posSeq).padStart(4, '0')}`,
+      number: docNumber('POS', posSeq),
+      shiftId: shift.id,
+      date: shift.date,
+      time,
+      type: 'sale',
+      warehouseId: COUNTER_WAREHOUSE.id,
+      customerName: pick(WALK_IN_NAMES),
+      lines,
+      totals,
+      cogs,
+      tradeIn,
+      method,
+      netDue,
+      cashTendered,
+      change: method === 'tunai' ? cashTendered - netDue : 0,
+      mdrFee: Math.round((netDue * MDR_RATE[method]) / 100),
+      cashierId: shift.cashierId,
+      cashierName: shift.cashierName,
+    })
+  }
+
+  /** Pembawa scrap perorangan menjual besi bekas ke konter, dibayar tunai. */
+  function createPosBuy(shift: PosShift, time: string): void {
+    const seed = pick(SCRAP_SEEDS)
+    const qty = roundTo(between(30, 180), seed.lot)
+    const unitPrice = roundTo(seed.cost * between(0.9, 1.1), 100)
+
+    const lines: DocumentLine[] = [{ productId: seed.id, qty, unitPrice, discountPercent: 0 }]
+    // Perorangan bukan PKP | tidak ada PPN masukan yang bisa dikreditkan.
+    const totals = calcTotals(lines, 0)
+
+    const key = stockKey(seed.id, COUNTER_WAREHOUSE.id)
+    stock.set(key, (stock.get(key) ?? 0) + qty)
+
+    posSeq += 1
+    posTransactions.push({
+      id: `PBK-${String(posSeq).padStart(4, '0')}`,
+      number: docNumber('PBK', posSeq),
+      shiftId: shift.id,
+      date: shift.date,
+      time,
+      type: 'buy',
+      warehouseId: COUNTER_WAREHOUSE.id,
+      customerName: pick(WALK_IN_NAMES),
+      lines,
+      totals,
+      cogs: 0,
+      tradeIn: null,
+      method: 'tunai',
+      netDue: totals.total,
+      cashTendered: 0,
+      change: 0,
+      mdrFee: 0,
+      cashierId: shift.cashierId,
+      cashierName: shift.cashierName,
+    })
+  }
+
+  /**
+   * Satu hari kerja konter = satu shift kasir.
+   *
+   * Shift hari ini sengaja DIBIARKAN TERBUKA supaya demo punya laci yang masih
+   * dipegang kasir | itulah keadaan yang paling sering ditemui saat aplikasi
+   * dibuka tengah hari.
+   */
+  function runCounterDay(date: IsoDate): void {
+    shiftSeq += 1
+    const cashier = CASHIERS[shiftSeq % CASHIERS.length]
+
+    const shift: PosShift = {
+      id: `SHF-${String(shiftSeq).padStart(4, '0')}`,
+      number: docNumber('SHF', shiftSeq),
+      cashierId: cashier.id,
+      cashierName: cashier.name,
+      warehouseId: COUNTER_WAREHOUSE.id,
+      date,
+      openedAt: '07:45',
+      openingFloat: 2_000_000,
+      closedAt: null,
+      countedCash: null,
+      depositedAmount: 0,
+      settledAt: null,
+      status: 'open',
+    }
+    posShifts.push(shift)
+
+    const transactionCount = 4 + Math.floor(random() * 7)
+    for (let index = 0; index < transactionCount; index += 1) {
+      // Sekitar satu dari delapan transaksi konter adalah pembelian scrap.
+      if (random() < 0.12) createPosBuy(shift, counterTime(index))
+      else createPosSale(shift, counterTime(index))
+    }
+
+    if (date === TODAY) return
+
+    const rows = posTransactions.filter((row) => row.shiftId === shift.id)
+    const cashIn = rows
+      .filter((row) => row.type === 'sale' && row.method === 'tunai')
+      .reduce((sum, row) => sum + row.netDue, 0)
+    const cashOut = rows.filter((row) => row.type === 'buy').reduce((sum, row) => sum + row.totals.total, 0)
+    const expected = shift.openingFloat + cashIn - cashOut
+
+    // Selisih kas kecil sesekali terjadi | salah kembalian, uang jatuh.
+    const variance = random() < 0.18 ? roundTo(between(-40_000, 25_000), 500) : 0
+
+    shift.countedCash = Math.max(0, expected + variance)
+    // Modal laci Rp 2 juta ditinggal untuk kembalian besok; sisanya disetor.
+    shift.depositedAmount = Math.max(0, shift.countedCash - 2_000_000)
+    shift.closedAt = '17:20'
+    shift.status = 'closed'
+
+    // Penyelenggara mencairkan dana H+1, dilewatkan akhir pekan.
+    let settleDate = addDays(date, 1)
+    while (isWeekend(settleDate)) settleDate = addDays(settleDate, 1)
+    // Dana shift kemarin belum cair per hari ini | itu keadaan yang wajar.
+    if (settleDate < TODAY) shift.settledAt = settleDate
+  }
+
+  /* ---------------------------------------------------------------------- */
   /* Pembelian | dipicu stok yang menipis                                    */
   /* ---------------------------------------------------------------------- */
 
@@ -521,7 +741,7 @@ export function generateSeed(): SeedData {
           totals: calcTotals(lines, VAT_RATE),
           paidAmount: 0,
           status: 'posted',
-          taxInvoiceNumber: supplier.npwp === '|' ? null : taxInvoiceNumber(500 + purchaseSeq),
+          taxInvoiceNumber: supplier.npwp === EMPTY ? null : taxInvoiceNumber(500 + purchaseSeq),
           notes: `Pengisian stok ${warehouse.name}`,
         })
       }
@@ -604,6 +824,8 @@ export function generateSeed(): SeedData {
     if (!isWeekend(date)) {
       if (random() < 0.58) createSalesInvoice(date)
       if (random() < 0.22) createSalesInvoice(date)
+      // Konter buka setiap hari kerja | satu shift kasir per hari.
+      runCounterDay(date)
     }
 
     // Scrap dikirim ke peleburan sekitar dua bulan sekali, setelah terkumpul.
@@ -628,7 +850,7 @@ export function generateSeed(): SeedData {
         productId: seed.id,
         warehouseId: warehouse.id,
         qtyDiff,
-        reason: 'Selisih stock opname triwulanan | susut & barang rusak',
+        reason: 'Selisih stock opname triwulanan — susut & barang rusak',
       })
       const key = stockKey(seed.id, warehouse.id)
       stock.set(key, (stock.get(key) ?? 0) + qtyDiff)
@@ -940,5 +1162,7 @@ export function generateSeed(): SeedData {
     payments,
     stockAdjustments,
     manualJournals,
+    posShifts,
+    posTransactions,
   }
 }

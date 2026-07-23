@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T">
 import type { TableColumn } from '@/components/ui/BaseTable.types'
+import { EMPTY } from '@/utils/placeholder'
 
 const props = withDefaults(
   defineProps<{
@@ -27,7 +28,7 @@ defineSlots<{
 
 function cellText(column: TableColumn<T>, row: T): string {
   const value = column.value?.(row)
-  return value === undefined || value === null || value === '' ? '|' : String(value)
+  return value === undefined || value === null || value === '' ? EMPTY : String(value)
 }
 
 function alignClass(column: TableColumn<T>): string {

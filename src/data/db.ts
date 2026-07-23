@@ -26,6 +26,8 @@ import type {
   ManualJournal,
   OpeningBalance,
   Payment,
+  PosShift,
+  PosTransaction,
   Product,
   PurchaseInvoice,
   SalesInvoice,
@@ -49,10 +51,12 @@ export interface Database {
   payments: Payment[]
   stockAdjustments: StockAdjustment[]
   manualJournals: ManualJournal[]
+  posShifts: PosShift[]
+  posTransactions: PosTransaction[]
 }
 
 /** Versi dinaikkan setiap bentuk data berubah, supaya seed lama dibuang. */
-const STORAGE_KEY = 'perkasa-erp.db.v3'
+const STORAGE_KEY = 'perkasa-erp.db.v4'
 
 function seed(): Database {
   const generated = generateSeed()

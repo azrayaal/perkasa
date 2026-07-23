@@ -4,6 +4,7 @@ import { accountName } from '@/data/chartOfAccounts'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { formatDate } from '@/utils/formatDate'
 import type { JournalEntry } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 withDefaults(
   defineProps<{
@@ -71,10 +72,10 @@ function totalCredit(entry: JournalEntry): number {
               <span class="block text-xs text-ink-muted">{{ line.memo }}</span>
             </td>
             <td class="amount px-4 py-2.5 text-right text-ink-primary">
-              {{ line.debit > 0 ? formatCurrency(line.debit) : '|' }}
+              {{ line.debit > 0 ? formatCurrency(line.debit) : EMPTY }}
             </td>
             <td class="amount px-4 py-2.5 text-right text-ink-primary">
-              {{ line.credit > 0 ? formatCurrency(line.credit) : '|' }}
+              {{ line.credit > 0 ? formatCurrency(line.credit) : EMPTY }}
             </td>
           </tr>
         </tbody>

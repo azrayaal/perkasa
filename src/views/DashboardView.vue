@@ -77,7 +77,7 @@ function openTimeline(entry: TimelineEntry): void {
   <div class="flex flex-col gap-6">
     <PageHeader
       :title="`Halo, ${auth.user?.name.split(' ')[0] ?? ''}`"
-      :description="`Ringkasan kinerja PT Perkasa Gemilang Distrindo | periode ${period.label}.`"
+      :description="`Ringkasan kinerja PT Perkasa Gemilang Distrindo — periode ${period.label}.`"
     />
 
     <LoadingState v-if="loading" :rows="6" />
@@ -115,7 +115,7 @@ function openTimeline(entry: TimelineEntry): void {
       </div>
 
       <!-- Baris 2: posisi keuangan & peringatan -->
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <StatCard
           label="Piutang Usaha"
           :value="formatCurrency(stats.receivable)"
@@ -141,6 +141,17 @@ function openTimeline(entry: TimelineEntry): void {
           :value="formatCurrency(stats.vatPayable)"
           icon="tax"
           caption="Keluaran dikurangi masukan"
+        />
+        <StatCard
+          label="Omzet Kasir"
+          :value="formatCurrency(stats.posRevenue)"
+          icon="pos"
+          :tone="stats.openShiftCount > 0 ? 'warning' : 'plain'"
+          :caption="
+            stats.openShiftCount > 0
+              ? `${stats.openShiftCount} shift belum ditutup`
+              : 'Seluruh shift sudah disetor'
+          "
         />
       </div>
 

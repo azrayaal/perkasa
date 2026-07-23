@@ -39,6 +39,7 @@ import type {
   TrialBalance,
   TrialBalanceRow,
 } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 const period = usePeriodStore()
 const toast = useToastStore()
@@ -304,7 +305,7 @@ async function submitForm(): Promise<void> {
           />
 
           <p v-if="hiddenEntryCount > 0" class="text-small text-ink-secondary">
-            Menampilkan {{ visibleEntries.length }} dari {{ entries.length }} entri |
+            Menampilkan {{ visibleEntries.length }} dari {{ entries.length }} entri —
             {{ hiddenEntryCount }} entri lainnya tidak ditampilkan. Persempit rentang periode atau
             gunakan pencarian untuk melihatnya.
           </p>
@@ -320,7 +321,7 @@ async function submitForm(): Promise<void> {
                 class="w-full rounded-control border border-line bg-surface-alt px-3 py-2 text-data text-ink-primary outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
               >
                 <option v-for="ledger in ledgers" :key="ledger.account.code" :value="ledger.account.code">
-                  {{ ledger.account.code }} | {{ ledger.account.name }}
+                  {{ ledger.account.code }} — {{ ledger.account.name }}
                 </option>
               </select>
             </label>
@@ -356,11 +357,11 @@ async function submitForm(): Promise<void> {
               </template>
 
               <template #cell-debit="{ row }">
-                <span class="amount">{{ row.debit > 0 ? formatCurrency(row.debit) : '|' }}</span>
+                <span class="amount">{{ row.debit > 0 ? formatCurrency(row.debit) : EMPTY }}</span>
               </template>
 
               <template #cell-credit="{ row }">
-                <span class="amount">{{ row.credit > 0 ? formatCurrency(row.credit) : '|' }}</span>
+                <span class="amount">{{ row.credit > 0 ? formatCurrency(row.credit) : EMPTY }}</span>
               </template>
 
               <template #cell-balance="{ row }">
@@ -423,14 +424,14 @@ async function submitForm(): Promise<void> {
             </template>
 
             <template #cell-opening="{ row }">
-              <span class="amount block">{{ row.openingDebit > 0 ? formatCurrency(row.openingDebit) : '|' }}</span>
+              <span class="amount block">{{ row.openingDebit > 0 ? formatCurrency(row.openingDebit) : EMPTY }}</span>
               <span class="amount block text-xs text-ink-muted">
                 {{ row.openingCredit > 0 ? `(K) ${formatCurrency(row.openingCredit)}` : '' }}
               </span>
             </template>
 
             <template #cell-mutation="{ row }">
-              <span class="amount block">{{ row.mutationDebit > 0 ? formatCurrency(row.mutationDebit) : '|' }}</span>
+              <span class="amount block">{{ row.mutationDebit > 0 ? formatCurrency(row.mutationDebit) : EMPTY }}</span>
               <span class="amount block text-xs text-ink-muted">
                 {{ row.mutationCredit > 0 ? `(K) ${formatCurrency(row.mutationCredit)}` : '' }}
               </span>
@@ -438,7 +439,7 @@ async function submitForm(): Promise<void> {
 
             <template #cell-ending="{ row }">
               <span class="amount block font-semibold">
-                {{ row.endingDebit > 0 ? formatCurrency(row.endingDebit) : '|' }}
+                {{ row.endingDebit > 0 ? formatCurrency(row.endingDebit) : EMPTY }}
               </span>
               <span class="amount block text-xs text-ink-muted">
                 {{ row.endingCredit > 0 ? `(K) ${formatCurrency(row.endingCredit)}` : '' }}
@@ -481,7 +482,7 @@ async function submitForm(): Promise<void> {
       <IntegrationNote title="Pembukuan tidak bisa ketinggalan transaksi">
         Jurnal di halaman ini <strong>tidak disimpan</strong>; ia diturunkan ulang dari faktur
         penjualan, faktur pembelian, beban, pembayaran, dan mutasi gudang setiap kali dibaca. Karena
-        itu mustahil ada transaksi yang tercatat di modul operasional tetapi hilang dari pembukuan |
+        itu mustahil ada transaksi yang tercatat di modul operasional tetapi hilang dari pembukuan —
         satu-satunya jurnal yang benar-benar ditulis manusia adalah jurnal manual, dan itu pun ditolak
         kalau tidak seimbang.
       </IntegrationNote>
@@ -519,7 +520,7 @@ async function submitForm(): Promise<void> {
                 class="min-w-0 flex-1 rounded-control border border-line bg-surface-alt px-3 py-2 text-data text-ink-primary outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
               >
                 <option v-for="account in CHART_OF_ACCOUNTS" :key="account.code" :value="account.code">
-                  {{ account.code }} | {{ account.name }}
+                  {{ account.code }} — {{ account.name }}
                 </option>
               </select>
 

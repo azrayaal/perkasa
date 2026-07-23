@@ -18,6 +18,8 @@ declare module 'vue-router' {
 const ALL: UserRole[] = ['direksi', 'akuntan', 'operasional']
 const FINANCE: UserRole[] = ['direksi', 'akuntan']
 const OPERATIONS: UserRole[] = ['direksi', 'akuntan', 'operasional']
+/** Kasir hanya boleh menyentuh terminal & riwayatnya sendiri. */
+const COUNTER: UserRole[] = ['direksi', 'operasional', 'kasir']
 
 const routes: RouteRecordRaw[] = [
   {
@@ -37,6 +39,24 @@ const routes: RouteRecordRaw[] = [
     name: ROUTE.performance,
     component: () => import('@/views/PerformanceView.vue'),
     meta: { roles: FINANCE, title: 'Performa' },
+  },
+  {
+    path: '/kasir',
+    name: ROUTE.pos,
+    component: () => import('@/views/PosView.vue'),
+    meta: { roles: COUNTER, title: 'Terminal POS' },
+  },
+  {
+    path: '/kasir/riwayat',
+    name: ROUTE.posHistory,
+    component: () => import('@/views/PosHistoryView.vue'),
+    meta: { roles: COUNTER, title: 'Riwayat Transaksi Kasir' },
+  },
+  {
+    path: '/kasir/shift',
+    name: ROUTE.posShifts,
+    component: () => import('@/views/PosShiftView.vue'),
+    meta: { roles: OPERATIONS, title: 'Shift & Setoran Kasir' },
   },
   {
     path: '/penjualan',
@@ -111,7 +131,7 @@ const routes: RouteRecordRaw[] = [
     path: '/pengaturan',
     name: ROUTE.settings,
     component: () => import('@/views/SettingsView.vue'),
-    meta: { roles: ALL, title: 'Pengaturan' },
+    meta: { roles: [...ALL, 'kasir'], title: 'Pengaturan' },
   },
   // EXTENSION POINT: tambah modul baru di sini (mis. /produksi, /aset-tetap).
   { path: '/:pathMatch(.*)*', redirect: '/' },

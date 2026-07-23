@@ -142,7 +142,7 @@ function confirmReset(): void {
         <div class="flex flex-col gap-4">
           <BaseCallout tone="warning" title="Seluruh perubahan tersimpan lokal">
             Faktur, pembayaran, beban, dan jurnal yang Anda buat disimpan di
-            <strong>localStorage browser ini</strong> | tidak dikirim ke server mana pun. Membuka
+            <strong>localStorage browser ini</strong> — tidak dikirim ke server mana pun. Membuka
             aplikasi di browser atau perangkat lain berarti memulai dari data awal.
           </BaseCallout>
 
@@ -166,13 +166,13 @@ function confirmReset(): void {
           </p>
           <p>
             <strong class="text-ink-primary">Jurnal diturunkan otomatis.</strong> Begitu sebuah
-            dokumen diposting, jurnalnya terbentuk sendiri dari bagan akun | tidak ada entri
+            dokumen diposting, jurnalnya terbentuk sendiri dari bagan akun — tidak ada entri
             akuntansi yang diketik manual kecuali jurnal penyesuaian.
           </p>
           <p>
             <strong class="text-ink-primary">Laporan dihitung dari jurnal.</strong> Buku besar,
             neraca saldo, neraca, laba rugi, arus kas, dan rekap pajak semuanya membaca jurnal yang
-            sama | karena itu tidak mungkin ada laporan yang saling bertentangan.
+            sama — karena itu tidak mungkin ada laporan yang saling bertentangan.
           </p>
           <p>
             Data transaksi <strong class="text-ink-primary">Januari–Juli 2026</strong> dihasilkan

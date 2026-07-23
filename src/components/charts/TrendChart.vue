@@ -89,7 +89,7 @@ function barHeight(value: number, plotHeight: number): number {
                     preserveAspectRatio="none"
                     viewBox="0 0 10 100"
                   >
-                    <title>{{ label }} | {{ item.name }}: {{ formatCurrencyShort(item.values[index] ?? 0) }}</title>
+                    <title>{{ label }} — {{ item.name }}: {{ formatCurrencyShort(item.values[index] ?? 0) }}</title>
                     <rect
                       x="0"
                       :y="100 - barHeight(item.values[index] ?? 0, 100)"

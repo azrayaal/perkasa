@@ -33,8 +33,11 @@ export type PeriodKey = string
  * `direksi`     | akses penuh, termasuk seluruh laporan keuangan.
  * `akuntan`     | modul keuangan: beban, pajak, pembukuan, laporan.
  * `operasional` | modul transaksi harian: penjualan, pembelian, gudang.
+ * `kasir`       | HANYA terminal POS dan shift miliknya sendiri. Sengaja
+ *                 sesempit mungkin: kasir memegang uang tunai, jadi ia tidak
+ *                 perlu melihat harga pokok, margin, atau laporan keuangan.
  */
-export type UserRole = 'direksi' | 'akuntan' | 'operasional'
+export type UserRole = 'direksi' | 'akuntan' | 'operasional' | 'kasir'
 
 export interface AuthUser {
   id: string
@@ -315,6 +318,137 @@ export interface Expense {
   status: 'posted' | 'paid'
 }
 
+/* -------------------------------------------------------------------------- */
+/* Point of Sale (POS)                                                         */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Cara bayar di kasir.
+ * Non-tunai TIDAK langsung menjadi kas: dananya mengendap di penyelenggara
+ * pembayaran dulu, jadi dibukukan sebagai piutang settlement.
+ */
+export type PosPaymentMethod = 'tunai' | 'qris' | 'debit'
+
+/**
+ * Jenis transaksi kasir.
+ * `sale` | jual barang ke pembeli (boleh disertai tukar tambah).
+ * `buy`  | beli barang bekas tunai dari pembawa scrap di konter.
+ */
+export type PosTransactionType = 'sale' | 'buy'
+
+export interface PosTransaction {
+  id: DocumentId
+  number: string
+  /** Shift kasir yang menaungi transaksi ini. */
+  shiftId: DocumentId
+  date: IsoDate
+  /** Jam transaksi "HH:mm" | struk ritel tanpa jam tidak bisa ditelusuri. */
+  time: string
+  type: PosTransactionType
+  warehouseId: WarehouseId
+  /** Pembeli konter umumnya tidak terdaftar; cukup nama di struk. */
+  customerName: string
+  lines: DocumentLine[]
+  totals: DocumentTotals
+  /** Harga pokok barang yang keluar (0 untuk transaksi `buy`). */
+  cogs: number
+  tradeIn: TradeIn | null
+  method: PosPaymentMethod
+  /** Yang benar-benar harus dibayar: total dikurangi nilai tukar tambah. */
+  netDue: number
+  /** Uang tunai yang diserahkan pembeli; 0 untuk non-tunai. */
+  cashTendered: number
+  change: number
+  /** Biaya jasa penyelenggara pembayaran (MDR); 0 untuk tunai. */
+  mdrFee: number
+  cashierId: string
+  cashierName: string
+}
+
+export type PosShiftStatus = 'open' | 'closed'
+
+/**
+ * Shift kasir | penanggung jawab fisik uang di laci.
+ *
+ * Tanpa shift, selisih kas tidak pernah ketahuan siapa pemegangnya. Karena itu
+ * setiap transaksi POS wajib menempel pada satu shift, dan penutupan shift
+ * memaksa kasir menghitung uang fisik.
+ */
+export interface PosShift {
+  id: DocumentId
+  number: string
+  cashierId: string
+  cashierName: string
+  warehouseId: WarehouseId
+  date: IsoDate
+  openedAt: string
+  /** Modal kas awal yang diambil dari bank ke laci. */
+  openingFloat: number
+  closedAt: string | null
+  /** Hasil hitung fisik uang saat tutup; `null` selama shift masih buka. */
+  countedCash: number | null
+  /** Uang yang disetor kembali ke bank saat tutup. */
+  depositedAmount: number
+  /**
+   * Tanggal dana QRIS/debit shift ini cair ke rekening bank (biasanya H+1).
+   * `null` = masih mengendap di penyelenggara pembayaran.
+   */
+  settledAt: IsoDate | null
+  status: PosShiftStatus
+  notes?: string
+}
+
+/** Ringkasan satu shift | dasar laporan tutup kasir (Z-report). */
+export interface PosShiftSummary {
+  shift: PosShift
+  warehouseName: string
+  transactionCount: number
+  /** Penjualan kotor (DPP + PPN) sebelum dipotong tukar tambah. */
+  grossSales: number
+  /** Nilai tukar tambah yang memotong pembayaran. */
+  tradeInValue: number
+  /** Uang tunai masuk dari penjualan. */
+  cashSales: number
+  /** Penerimaan non-tunai (QRIS + debit), bruto sebelum MDR. */
+  nonCashSales: number
+  /** Uang tunai keluar untuk membeli barang bekas di konter. */
+  cashPurchases: number
+  mdrFee: number
+  /** Kas seharusnya = modal awal + tunai masuk | tunai keluar. */
+  expectedCash: number
+  /** Selisih hitung fisik terhadap `expectedCash`; positif = lebih. */
+  cashDifference: number
+  /** Kontribusi shift ini ke PPN keluaran. */
+  outputVat: number
+}
+
+export interface NewPosShiftPayload {
+  warehouseId: WarehouseId
+  openingFloat: number
+}
+
+export interface ClosePosShiftPayload {
+  shiftId: DocumentId
+  countedCash: number
+  /** Uang yang disetor ke bank; sisanya tetap jadi modal laci besok. */
+  depositedAmount: number
+  notes?: string
+}
+
+export interface NewPosTransactionPayload {
+  shiftId: DocumentId
+  type: PosTransactionType
+  customerName: string
+  lines: DocumentLine[]
+  method: PosPaymentMethod
+  /** Wajib untuk metode tunai; harus >= yang harus dibayar. */
+  cashTendered: number
+  tradeIn?: {
+    lines: TradeInLine[]
+    vatable: boolean
+  }
+}
+
 export type PaymentDirection = 'in' | 'out'
 
 /** Penerimaan dari pelanggan / pembayaran ke pemasok. */
@@ -346,7 +480,7 @@ export interface StockMove {
   qty: number
   type: StockMoveType
   unitCost: number
-  refType: 'sales' | 'purchase' | 'opening' | 'adjustment'
+  refType: 'sales' | 'purchase' | 'opening' | 'adjustment' | 'pos'
   refId: DocumentId | null
   /** Nomor dokumen sumber, untuk ditampilkan di kartu stok. */
   refNumber: string | null
@@ -372,6 +506,7 @@ export interface StockAdjustment {
 /** Modul asal jurnal | dipakai untuk filter & label sumber di Pembukuan. */
 export type JournalSource =
   | 'opening'
+  | 'pos'
   | 'sales'
   | 'purchase'
   | 'expense'
@@ -726,6 +861,10 @@ export interface DashboardStats {
   vatPayable: number
   lowStockCount: number
   draftCount: number
+  /** Omzet kasir pada periode berjalan. */
+  posRevenue: number
+  /** Jumlah shift kasir yang belum ditutup | uang masih di laci. */
+  openShiftCount: number
 }
 
 /** Titik pada grafik tren bulanan. */
@@ -801,6 +940,8 @@ export interface PerformanceReport {
  */
 export type BadgeStatus =
   | DocumentStatus
+  | PosShiftStatus
+  | PosPaymentMethod
   | StockStatus
   | PartnerStatus
   | TaxFilingStatus

@@ -34,6 +34,7 @@ import type {
   TradeInLine,
   Warehouse,
 } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 const router = useRouter()
 const toast = useToastStore()
@@ -333,7 +334,7 @@ async function postInvoice(row: SalesRow): Promise<void> {
 
           <template #cell-outstanding="{ row }">
             <span class="amount" :class="row.status === 'overdue' ? 'text-state-error' : ''">
-              {{ row.outstanding > 0 ? formatCurrency(row.outstanding) : '|' }}
+              {{ row.outstanding > 0 ? formatCurrency(row.outstanding) : EMPTY }}
             </span>
             <span v-if="row.tradeInValue > 0" class="block text-xs text-ink-muted">
               −{{ formatCurrency(row.tradeInValue) }} tukar tambah
@@ -383,7 +384,7 @@ async function postInvoice(row: SalesRow): Promise<void> {
     <BaseModal
       :open="formOpen"
       title="Faktur Penjualan Baru"
-      description="Tersimpan sebagai draft | stok dan jurnal baru terbentuk setelah diposting."
+      description="Tersimpan sebagai draft — stok dan jurnal baru terbentuk setelah diposting."
       @close="formOpen = false"
     >
       <form class="flex flex-col gap-4" @submit.prevent="submitForm">
@@ -440,7 +441,7 @@ async function postInvoice(row: SalesRow): Promise<void> {
               <span class="font-semibold text-ink-primary">Tukar tambah besi bekas</span>
               <span class="block text-ink-secondary">
                 Pelanggan menyerahkan barang bekas sebagai potongan pembayaran. Barangnya masuk
-                gudang, dan tagihannya berkurang | bukan harga jualnya yang didiskon.
+                gudang, dan tagihannya berkurang — bukan harga jualnya yang didiskon.
               </span>
             </span>
           </label>

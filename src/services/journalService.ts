@@ -30,6 +30,7 @@ export interface JournalSummary {
 
 export const SOURCE_LABEL: Record<JournalSource, string> = {
   opening: 'Saldo Awal',
+  pos: 'Kasir (POS)',
   sales: 'Penjualan',
   purchase: 'Pembelian',
   expense: 'Beban',

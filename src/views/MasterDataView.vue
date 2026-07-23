@@ -491,7 +491,7 @@ const accountColumns: TableColumn<Account>[] = [
 
       <IntegrationNote title="Master data adalah kunci yang mengikat modul">
         Satu <strong>productId</strong> yang sama dipakai faktur penjualan, faktur pembelian, dan
-        kartu stok | karena itu laporan per produk tidak perlu mencocokkan nama. Begitu pula
+        kartu stok — karena itu laporan per produk tidak perlu mencocokkan nama. Begitu pula
         <strong>bagan akun</strong>: setiap dokumen hanya boleh menyentuh buku lewat kode akun di
         sini, sehingga neraca dan laporan keuangan selalu terhubung ke transaksinya.
       </IntegrationNote>

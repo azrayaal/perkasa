@@ -30,6 +30,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { formatDate } from '@/utils/formatDate'
 import type { AccountCode, ExpenseRow, IsoDate, RankedItem, WithholdingType } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 const period = usePeriodStore()
 const toast = useToastStore()
@@ -125,7 +126,7 @@ async function submitPay(): Promise<void> {
   try {
     await payExpense(target.expense.id, payForm.value.accountCode, payForm.value.date)
     payOpen.value = false
-    toast.push(`Beban ${target.expense.number} dilunasi | jurnal kas keluar terbentuk.`)
+    toast.push(`Beban ${target.expense.number} dilunasi — jurnal kas keluar terbentuk.`)
     await load()
   } catch (caught) {
     toast.push(caught instanceof Error ? caught.message : 'Gagal melunasi beban.', 'error')
@@ -269,7 +270,7 @@ async function submitForm(): Promise<void> {
               >
                 <option value="all">Semua akun beban</option>
                 <option v-for="account in EXPENSE_ACCOUNTS" :key="account.code" :value="account.code">
-                  {{ account.code }} | {{ account.name }}
+                  {{ account.code }} — {{ account.name }}
                 </option>
               </select>
             </div>
@@ -296,13 +297,13 @@ async function submitForm(): Promise<void> {
 
             <template #cell-ppn="{ row }">
               <span class="amount">
-                {{ row.expense.ppn > 0 ? formatCurrency(row.expense.ppn) : '|' }}
+                {{ row.expense.ppn > 0 ? formatCurrency(row.expense.ppn) : EMPTY }}
               </span>
             </template>
 
             <template #cell-withholding="{ row }">
               <span class="amount">
-                {{ row.expense.withholdingAmount > 0 ? formatCurrency(row.expense.withholdingAmount) : '|' }}
+                {{ row.expense.withholdingAmount > 0 ? formatCurrency(row.expense.withholdingAmount) : EMPTY }}
               </span>
               <span v-if="row.expense.withholding !== 'none'" class="block text-xs text-ink-muted">
                 {{ WITHHOLDING_LABEL[row.expense.withholding] }}
@@ -386,7 +387,7 @@ async function submitForm(): Promise<void> {
             class="w-full rounded-control border border-line bg-surface-alt px-3 py-2 text-data text-ink-primary outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
           >
             <option v-for="account in CASH_ACCOUNTS" :key="account.code" :value="account.code">
-              {{ account.code }} | {{ account.name }}
+              {{ account.code }} — {{ account.name }}
             </option>
           </select>
         </label>
@@ -401,7 +402,7 @@ async function submitForm(): Promise<void> {
     <BaseModal
       :open="formOpen"
       title="Catat Beban"
-      description="Beban langsung dibukukan | tidak ada tahap draft."
+      description="Beban langsung dibukukan — tidak ada tahap draft."
       @close="formOpen = false"
     >
       <form class="flex flex-col gap-4" @submit.prevent="submitForm">
@@ -418,7 +419,7 @@ async function submitForm(): Promise<void> {
               class="w-full rounded-control border border-line bg-surface-alt px-3 py-2 text-data text-ink-primary outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
             >
               <option v-for="account in EXPENSE_ACCOUNTS" :key="account.code" :value="account.code">
-                {{ account.code }} | {{ account.name }}
+                {{ account.code }} — {{ account.name }}
               </option>
             </select>
           </label>
@@ -469,7 +470,7 @@ async function submitForm(): Promise<void> {
             class="w-full rounded-control border border-line bg-surface-alt px-3 py-2 text-data text-ink-primary outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
           >
             <option v-for="account in CASH_ACCOUNTS" :key="account.code" :value="account.code">
-              {{ account.code }} | {{ account.name }}
+              {{ account.code }} — {{ account.name }}
             </option>
             <option value="">Belum dibayar (akui sebagai utang)</option>
           </select>
@@ -479,7 +480,7 @@ async function submitForm(): Promise<void> {
           <div class="flex items-baseline justify-between gap-3">
             <span class="text-small text-ink-secondary">Kas keluar</span>
             <span class="amount text-data font-semibold text-ink-primary">
-              {{ form.paidFromAccount === '' ? '|' : formatCurrency(formCashOut) }}
+              {{ form.paidFromAccount === '' ? EMPTY : formatCurrency(formCashOut) }}
             </span>
           </div>
           <p class="mt-1 text-xs text-ink-muted">

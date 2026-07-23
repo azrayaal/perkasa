@@ -11,9 +11,11 @@ import type { Account, AccountCode, AccountGroup } from '@/types'
 export const CHART_OF_ACCOUNTS: Account[] = [
   /* Aset lancar */
   { code: '1100', name: 'Kas Kecil', type: 'asset', group: 'kas-bank', normalBalance: 'debit', cash: true },
-  { code: '1110', name: 'Bank BCA | Operasional', type: 'asset', group: 'kas-bank', normalBalance: 'debit', cash: true },
-  { code: '1120', name: 'Bank Mandiri | Payroll', type: 'asset', group: 'kas-bank', normalBalance: 'debit', cash: true },
+  { code: '1110', name: 'Bank BCA \u2014 Operasional', type: 'asset', group: 'kas-bank', normalBalance: 'debit', cash: true },
+  { code: '1120', name: 'Bank Mandiri \u2014 Payroll', type: 'asset', group: 'kas-bank', normalBalance: 'debit', cash: true },
+  { code: '1130', name: 'Kas Kasir (POS)', type: 'asset', group: 'kas-bank', normalBalance: 'debit', cash: true, description: 'Uang fisik di laci kasir; saldonya dipertanggungjawabkan per shift.' },
   { code: '1200', name: 'Piutang Usaha', type: 'asset', group: 'piutang', normalBalance: 'debit', description: 'Saldo mengikuti faktur penjualan yang belum lunas.' },
+  { code: '1250', name: 'Piutang Penyelenggara Pembayaran', type: 'asset', group: 'piutang', normalBalance: 'debit', description: 'Dana QRIS & debit yang belum dicairkan penyelenggara ke rekening bank.' },
   { code: '1300', name: 'Persediaan Barang Dagang', type: 'asset', group: 'persediaan', normalBalance: 'debit', description: 'Saldo mengikuti nilai kartu stok gudang.' },
   { code: '1400', name: 'PPN Masukan', type: 'asset', group: 'aset-lancar-lain', normalBalance: 'debit' },
   { code: '1410', name: 'PPh 25 Dibayar di Muka', type: 'asset', group: 'aset-lancar-lain', normalBalance: 'debit' },
@@ -50,7 +52,7 @@ export const CHART_OF_ACCOUNTS: Account[] = [
   /* Harga pokok */
   { code: '5100', name: 'Harga Pokok Penjualan', type: 'cogs', group: 'harga-pokok', normalBalance: 'debit' },
   { code: '5200', name: 'Selisih Persediaan', type: 'cogs', group: 'harga-pokok', normalBalance: 'debit', description: 'Susut/lebih hasil stock opname gudang.' },
-  { code: '5300', name: 'Selisih Penilaian Tukar Tambah', type: 'cogs', group: 'harga-pokok', normalBalance: 'debit', description: 'Selisih antara nilai tukar tambah yang disepakati dan harga pokok standar barang bekas.' },
+  { code: '5300', name: 'Selisih Penilaian Barang Bekas', type: 'cogs', group: 'harga-pokok', normalBalance: 'debit', description: 'Selisih antara nilai tebus yang dinegosiasi dan harga pokok standar barang bekas, baik lewat tukar tambah maupun pembelian konter.' },
 
   /* Beban operasional */
   { code: '6100', name: 'Beban Gaji & Tunjangan', type: 'expense', group: 'beban-operasional', normalBalance: 'debit' },
@@ -65,9 +67,11 @@ export const CHART_OF_ACCOUNTS: Account[] = [
   { code: '6190', name: 'Beban Penyusutan', type: 'expense', group: 'beban-operasional', normalBalance: 'debit' },
   { code: '6200', name: 'Beban Administrasi Bank', type: 'expense', group: 'beban-operasional', normalBalance: 'debit' },
   { code: '6210', name: 'Beban Perjalanan Dinas', type: 'expense', group: 'beban-operasional', normalBalance: 'debit' },
+  { code: '6220', name: 'Beban Biaya Transaksi Pembayaran', type: 'expense', group: 'beban-operasional', normalBalance: 'debit', description: 'Potongan MDR penyelenggara QRIS & mesin debit.' },
 
   /* Non-operasional */
   { code: '7100', name: 'Beban Bunga Pinjaman', type: 'other-expense', group: 'beban-lain', normalBalance: 'debit' },
+  { code: '7200', name: 'Selisih Kas', type: 'other-expense', group: 'beban-lain', normalBalance: 'debit', description: 'Selisih hitung fisik laci kasir saat tutup shift; kurang di debit, lebih di kredit.' },
   { code: '8100', name: 'Beban Pajak Penghasilan', type: 'tax-expense', group: 'pajak-penghasilan', normalBalance: 'debit' },
 ]
 
@@ -80,7 +84,9 @@ export const ACC = {
   cash: '1100',
   bankOps: '1110',
   bankPayroll: '1120',
+  cashRegister: '1130',
   receivable: '1200',
+  paymentGatewayReceivable: '1250',
   inventory: '1300',
   vatIn: '1400',
   prepaidCorporateTax: '1410',
@@ -100,8 +106,10 @@ export const ACC = {
   otherIncome: '4900',
   cogs: '5100',
   inventoryVariance: '5200',
-  tradeInVariance: '5300',
+  usedGoodsVariance: '5300',
+  mdrFee: '6220',
   interest: '7100',
+  cashVariance: '7200',
   corporateTaxExpense: '8100',
 } as const satisfies Record<string, AccountCode>
 

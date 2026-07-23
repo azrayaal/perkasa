@@ -70,7 +70,7 @@ function unitOf(productId: string): string {
             @change="onProductChange(index, ($event.target as HTMLSelectElement).value)"
           >
             <option v-for="product in products" :key="product.id" :value="product.id">
-              {{ product.sku }} | {{ product.name }}
+              {{ product.sku }} — {{ product.name }}
             </option>
           </select>
         </label>

@@ -13,6 +13,7 @@ import { usePeriodStore } from '@/stores/periodStore'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { formatDate } from '@/utils/formatDate'
 import type { BalanceSheet, CompanyProfile, ReportSection } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 const period = usePeriodStore()
 
@@ -42,7 +43,7 @@ watch(() => [period.from, period.to], load, { immediate: true })
 const currentRatio = computed(() => {
   if (!sheet.value) return '0,00'
   const liabilities = sheet.value.currentLiabilities.total
-  if (liabilities === 0) return '|'
+  if (liabilities === 0) return EMPTY
   return (sheet.value.currentAssets.total / liabilities).toFixed(2).replace('.', ',')
 })
 
@@ -179,7 +180,7 @@ const equitySection = computed<ReportSection | null>(() => {
         <strong>Piutang Usaha</strong> dari faktur penjualan yang belum lunas,
         <strong>Persediaan</strong> dari kartu stok gudang, <strong>Utang Usaha</strong> dari faktur
         pembelian, dan <strong>Utang Pajak</strong> dari PPN keluaran–masukan serta PPh yang
-        dipotong. Semuanya terbentuk bersamaan saat dokumen diposting | tidak perlu tutup buku
+        dipotong. Semuanya terbentuk bersamaan saat dokumen diposting — tidak perlu tutup buku
         manual untuk melihat neraca hari ini.
       </IntegrationNote>
     </template>

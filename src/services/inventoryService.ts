@@ -23,6 +23,7 @@ import type {
   WarehouseId,
   WarehouseSummary,
 } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 /** Seluruh mutasi stok, urut tanggal. Sinkron supaya bisa dipakai service lain. */
 export function buildStockMoves(): StockMove[] {
@@ -84,6 +85,46 @@ export function buildStockMoves(): StockMove[] {
         refId: invoice.id,
         refNumber: invoice.number,
         note: 'Barang tukar tambah diterima dari pelanggan',
+      })
+    }
+  }
+
+  /*
+   * POS. Penjualan konter mengeluarkan barang, pembelian konter & tukar tambah
+   * memasukkannya | semuanya ke gudang tempat kasir bertugas.
+   */
+  for (const transaction of database.posTransactions) {
+    const outbound = transaction.type === 'sale'
+
+    for (const line of transaction.lines) {
+      moves.push({
+        id: `SM-${transaction.id}-${line.productId}`,
+        date: transaction.date,
+        productId: line.productId,
+        warehouseId: transaction.warehouseId,
+        qty: outbound ? -line.qty : line.qty,
+        type: outbound ? 'out' : 'in',
+        unitCost: productById.get(line.productId)?.cost ?? 0,
+        refType: 'pos',
+        refId: transaction.id,
+        refNumber: transaction.number,
+        note: outbound ? 'Penjualan konter' : 'Pembelian barang bekas di konter',
+      })
+    }
+
+    for (const line of transaction.tradeIn?.lines ?? []) {
+      moves.push({
+        id: `SM-${transaction.id}-TT-${line.productId}`,
+        date: transaction.date,
+        productId: line.productId,
+        warehouseId: transaction.tradeIn!.warehouseId,
+        qty: line.qty,
+        type: 'in',
+        unitCost: productById.get(line.productId)?.cost ?? 0,
+        refType: 'pos',
+        refId: transaction.id,
+        refNumber: transaction.number,
+        note: 'Barang tukar tambah diterima di konter',
       })
     }
   }
@@ -211,7 +252,7 @@ export function getStockCard(productId: ProductId, warehouseId: WarehouseId | nu
   let balance = 0
   const rows: StockCardRow[] = moves.map((move) => {
     balance += move.qty
-    return { move, warehouseName: warehouseName.get(move.warehouseId) ?? '|', balance }
+    return { move, warehouseName: warehouseName.get(move.warehouseId) ?? EMPTY, balance }
   })
 
   // Mutasi terbaru di atas; saldo berjalan tetap dihitung dari yang paling lama.

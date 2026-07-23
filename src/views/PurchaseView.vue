@@ -31,6 +31,7 @@ import type {
   Supplier,
   Warehouse,
 } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 const router = useRouter()
 const toast = useToastStore()
@@ -271,7 +272,7 @@ async function submitForm(): Promise<void> {
 
           <template #cell-outstanding="{ row }">
             <span class="amount" :class="row.status === 'overdue' ? 'text-state-error' : ''">
-              {{ row.outstanding > 0 ? formatCurrency(row.outstanding) : '|' }}
+              {{ row.outstanding > 0 ? formatCurrency(row.outstanding) : EMPTY }}
             </span>
             <span v-if="row.overdueDays > 0" class="block text-xs text-state-error">
               {{ row.overdueDays }} hari lewat tempo
@@ -341,7 +342,7 @@ async function submitForm(): Promise<void> {
               class="w-full rounded-control border border-line bg-surface-alt px-3 py-2 text-data text-ink-primary outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
             >
               <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">
-                {{ warehouse.name }} | {{ warehouse.city }}
+                {{ warehouse.name }} — {{ warehouse.city }}
               </option>
             </select>
           </label>

@@ -22,7 +22,8 @@ npm run typecheck
 |---|---|---|---|
 | Direksi | `direksi@perkasagemilang.co.id` | `perkasa123` | Seluruh modul |
 | Akuntan | `akuntan@perkasagemilang.co.id` | `perkasa123` | Keuangan, pajak, pembukuan, laporan |
-| Operasional | `operasional@perkasagemilang.co.id` | `perkasa123` | Penjualan, pembelian, gudang |
+| Operasional | `operasional@perkasagemilang.co.id` | `perkasa123` | Penjualan, pembelian, gudang, kasir |
+| Kasir | `kasir@perkasagemilang.co.id` | `perkasa123` | Hanya terminal POS & riwayatnya |
 
 ---
 
@@ -52,6 +53,7 @@ Konsekuensi yang bisa diuji langsung di aplikasi:
 
 - Nilai kartu stok gudang **selalu sama** dengan saldo akun `1300 Persediaan` di
   Neraca | dashboard menampilkannya berdampingan pada kartu "Uji Konsistensi Data".
+- Sisa uang laci menurut rekap shift kasir = saldo akun `1130 Kas Kasir`.
 - Total faktur penjualan belum lunas = saldo `1200 Piutang Usaha`.
 - Total faktur pembelian belum lunas = saldo `2100 Utang Usaha`.
 - Laba bersih di Laba Rugi = penambah ekuitas di Neraca (selisih neraca nol).
@@ -71,10 +73,34 @@ Gudang, Pembukuan, Perpajakan, dan Neraca | semuanya bergerak dari satu aksi.
 | Bukti kas masuk | D kas/bank · K `1200` Piutang |
 | Bukti kas keluar | D `2100` Utang · K kas/bank |
 | Selisih stock opname | D/K `5200` Selisih Persediaan lawan `1300` Persediaan |
+| Penjualan kasir (tunai) | D `1130` Kas Kasir · K `4100` Penjualan · K `2200` PPN Keluaran<br>D `5100` HPP · K `1300` Persediaan |
+| Penjualan kasir (QRIS/debit) | D `1250` Piutang Penyelenggara · D `6220` Beban MDR · K `4100` · K `2200` |
+| Beli barang bekas di konter | D `1300` Persediaan (harga pokok standar) · D/K `5300` Selisih Penilaian · K `1130` Kas Kasir |
+| Buka shift | D `1130` Kas Kasir · K `1110` Bank BCA |
+| Tutup shift | D `1110` Bank (setoran) · D/K `7200` Selisih Kas · K `1130` Kas Kasir |
+| Pencairan QRIS/debit (H+1) | D `1110` Bank · K `1250` Piutang Penyelenggara |
 | Tukar tambah (menempel pada faktur penjualannya) | D `1300` Persediaan (harga pokok standar) · D/K `5300` Selisih Penilaian · D `1400` PPN Masukan · K `1200` Piutang Usaha |
 
 Faktur berstatus **draft** sengaja tidak dijurnal dan tidak mengurangi stok |
 itulah gunanya tombol posting.
+
+### Kasir (POS)
+
+Konter gudang pusat melayani pembeli eceran lewat terminal POS. Ia bukan form
+penjualan cepat, melainkan modul dengan tiga kaidah kasnya sendiri:
+
+- **Shift.** Uang fisik di laci selalu ada penanggung jawabnya. Kasir membuka
+  shift dengan modal kembalian (dipindahkan dari bank ke akun `1130`), dan
+  menutupnya dengan menghitung uang fisik.
+- **Selisih kas.** Hitung fisik yang meleset tidak dibulatkan diam-diam | ia
+  dijurnal ke `7200 Selisih Kas` dan langsung terlihat di Laba Rugi.
+- **Settlement.** QRIS dan debit **bukan kas**. Dananya mengendap di
+  penyelenggara (`1250`), dipotong MDR (`6220`), dan baru menjadi saldo bank
+  setelah cair H+1. Tanpa pemisahan ini, saldo bank di Neraca akan lebih besar
+  daripada rekening koran yang sesungguhnya.
+
+Konter juga membeli besi bekas tunai dari pembawa scrap perorangan. Karena
+mereka bukan PKP, pembelian itu tidak ber-PPN masukan.
 
 ### Tukar tambah besi bekas
 
@@ -90,10 +116,13 @@ dijalankan penuh oleh sistem:
   yang mengurangi PPN kurang bayar pada SPT masa itu.
 - Yang berkurang adalah **piutang**, bukan pendapatan.
 
+Tukar tambah juga tersedia di terminal kasir, dengan aturan posting yang sama.
+
 Nilai tebus hasil negosiasi boleh berbeda dari harga pokok standar SKU bekas.
 Persediaan tetap didebit sebesar harga pokok standar | supaya nilai kartu stok
 terus sama persis dengan saldo akun `1300` | dan selisih tawar-menawarnya diakui
-sebagai untung/rugi di akun `5300 Selisih Penilaian Tukar Tambah`.
+sebagai untung/rugi di akun `5300 Selisih Penilaian Barang Bekas` | berlaku sama
+untuk pembelian scrap di konter.
 
 ---
 
@@ -138,10 +167,11 @@ dari 1 Januari sampai 22 Juli 2026: penjualan menggerus stok, stok tipis memicu
 pembelian ke pemasok, pelunasan menggerakkan kas, dan pajak masa disetor bulan
 berikutnya. Karena PRNG-nya bersemai tetap, semua orang melihat angka yang sama.
 
-Hasilnya: 125 faktur penjualan (17 di antaranya disertai tukar tambah, 3 berupa
-penjualan besi bekas ke peleburan), 113 faktur pembelian, 75 beban, dan 561
-entri jurnal | dengan pendapatan Rp 9,58 M, marjin kotor 22,5%, laba bersih
-6,3%, dan neraca yang seimbang sempurna.
+Hasilnya: 125 faktur penjualan bertermin (17 disertai tukar tambah, 3 penjualan
+besi bekas ke peleburan), 113 faktur pembelian, 75 beban, 145 shift kasir dengan
+1.024 struk POS, dan 1.952 entri jurnal — dengan pendapatan Rp 9,66 M (Rp 1,3 M
+di antaranya dari konter), marjin kotor 22,5%, laba bersih 6,3%, dan neraca yang
+seimbang sempurna.
 
 Semua perubahan tersimpan di browser. **Pengaturan → Reset Data Demo**
 mengembalikannya ke kondisi awal.

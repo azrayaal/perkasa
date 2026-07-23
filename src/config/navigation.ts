@@ -17,6 +17,10 @@ export interface NavSection {
 
 const ALL: UserRole[] = ['direksi', 'akuntan', 'operasional']
 const FINANCE: UserRole[] = ['direksi', 'akuntan']
+/** Yang boleh berdiri di konter. Kasir TIDAK punya akses ke menu lain. */
+const COUNTER: UserRole[] = ['direksi', 'operasional', 'kasir']
+/** Pengawasan kasir: yang menagih pertanggungjawaban uang laci. */
+const SUPERVISOR: UserRole[] = ['direksi', 'akuntan', 'operasional']
 
 /**
  * Sumber tunggal struktur sidebar.
@@ -36,6 +40,14 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { name: ROUTE.dashboard, label: 'Dashboard', icon: 'dashboard', roles: ALL },
       { name: ROUTE.performance, label: 'Performa', icon: 'performance', roles: FINANCE },
+    ],
+  },
+  {
+    title: 'Kasir',
+    items: [
+      { name: ROUTE.pos, label: 'Terminal POS', icon: 'pos', roles: COUNTER },
+      { name: ROUTE.posHistory, label: 'Riwayat Transaksi', icon: 'receipt', roles: COUNTER },
+      { name: ROUTE.posShifts, label: 'Shift & Setoran', icon: 'drawer', roles: SUPERVISOR },
     ],
   },
   {
@@ -65,7 +77,7 @@ export const NAV_SECTIONS: NavSection[] = [
     title: 'Sistem',
     items: [
       { name: ROUTE.master, label: 'Master Data', icon: 'master', roles: ALL },
-      { name: ROUTE.settings, label: 'Pengaturan', icon: 'settings', roles: ALL },
+      { name: ROUTE.settings, label: 'Pengaturan', icon: 'settings', roles: [...ALL, 'kasir'] },
     ],
   },
 ]
@@ -75,6 +87,7 @@ export const ROLE_HOME: Record<UserRole, RouteName> = {
   direksi: ROUTE.dashboard,
   akuntan: ROUTE.dashboard,
   operasional: ROUTE.sales,
+  kasir: ROUTE.pos,
 }
 
 /** Label role untuk ditampilkan di UI. */
@@ -82,6 +95,7 @@ export const ROLE_LABEL: Record<UserRole, string> = {
   direksi: 'Direksi',
   akuntan: 'Akuntan',
   operasional: 'Operasional',
+  kasir: 'Kasir',
 }
 
 /** Sidebar hanya menampilkan section yang punya minimal satu menu untuk role ini. */

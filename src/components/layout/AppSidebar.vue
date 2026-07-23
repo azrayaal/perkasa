@@ -43,8 +43,8 @@ const tooltipClass = computed(() => (props.collapsed ? 'lg:block' : 'lg:hidden')
   />
 
   <!--
-    Sidebar SELALU gelap | di light mode ia jadi jangkar visual di sebelah
-    konten terang | jadi seluruh warnanya memakai token `sidebar-*`.
+    Sidebar SELALU gelap — di light mode ia jadi jangkar visual di sebelah
+    konten terang — jadi seluruh warnanya memakai token `sidebar-*`.
   -->
   <aside
     class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-sidebar-line bg-sidebar transition-[transform,width] duration-200 lg:translate-x-0"

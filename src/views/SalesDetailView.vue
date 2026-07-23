@@ -25,6 +25,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { formatCurrency, formatNumber, formatPercent } from '@/utils/formatCurrency'
 import { formatDate } from '@/utils/formatDate'
 import type { Payment, SalesInvoiceDetail } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 const props = defineProps<{ id: string }>()
 
@@ -71,7 +72,7 @@ async function post(): Promise<void> {
 
   try {
     await postSalesInvoice(detail.value.invoice.id)
-    toast.push('Faktur diposting | stok, jurnal, dan PPN keluaran ikut terbentuk.')
+    toast.push('Faktur diposting — stok, jurnal, dan PPN keluaran ikut terbentuk.')
     await load()
   } catch (caught) {
     toast.push(caught instanceof Error ? caught.message : 'Gagal memposting faktur.', 'error')
@@ -130,7 +131,7 @@ async function submitPayment(): Promise<void> {
     })
 
     paymentOpen.value = false
-    toast.push('Penerimaan dicatat | kas bertambah, piutang berkurang.')
+    toast.push('Penerimaan dicatat — kas bertambah, piutang berkurang.')
     await load()
   } catch (caught) {
     toast.push(caught instanceof Error ? caught.message : 'Gagal mencatat pembayaran.', 'error')
@@ -147,7 +148,7 @@ async function submitPayment(): Promise<void> {
     <template v-else-if="detail">
       <PageHeader
         :title="detail.invoice.number"
-        :description="`${detail.customer?.name ?? '|'} · ${formatDate(detail.invoice.date)} · jatuh tempo ${formatDate(detail.invoice.dueDate)}`"
+        :description="`${detail.customer?.name ?? EMPTY} · ${formatDate(detail.invoice.date)} · jatuh tempo ${formatDate(detail.invoice.dueDate)}`"
       >
         <template #actions>
           <BaseButton variant="ghost" icon="back" @click="router.push({ name: ROUTE.sales })">
@@ -218,7 +219,7 @@ async function submitPayment(): Promise<void> {
                     </td>
                     <td class="amount px-4 py-3 text-right">{{ formatCurrency(row.line.unitPrice) }}</td>
                     <td class="amount px-4 py-3 text-right">
-                      {{ row.line.discountPercent > 0 ? formatPercent(row.line.discountPercent) : '|' }}
+                      {{ row.line.discountPercent > 0 ? formatPercent(row.line.discountPercent) : EMPTY }}
                     </td>
                     <td class="amount px-4 py-3 text-right font-semibold">{{ formatCurrency(row.amount) }}</td>
                   </tr>
@@ -252,7 +253,7 @@ async function submitPayment(): Promise<void> {
 
           <!--
             Tukar tambah disajikan sebagai blok tersendiri, bukan baris diskon,
-            supaya jelas bahwa ini penyerahan barang dari pelanggan | lengkap
+            supaya jelas bahwa ini penyerahan barang dari pelanggan — lengkap
             dengan konsekuensi PPN masukannya.
           -->
           <BaseCard
@@ -319,7 +320,7 @@ async function submitPayment(): Promise<void> {
           <!-- Bukti integrasi paling gamblang: jurnal yang lahir dari dokumen ini. -->
           <BaseCard
             title="Jurnal Otomatis"
-            subtitle="Dibentuk oleh sistem dari faktur ini | tidak diketik manual"
+            subtitle="Dibentuk oleh sistem dari faktur ini — tidak diketik manual"
           >
             <EmptyState
               v-if="detail.journal.length === 0"
@@ -461,7 +462,7 @@ async function submitPayment(): Promise<void> {
             class="w-full rounded-control border border-line bg-surface-alt px-3 py-2 text-data text-ink-primary outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
           >
             <option v-for="account in CASH_ACCOUNTS" :key="account.code" :value="account.code">
-              {{ account.code }} | {{ account.name }}
+              {{ account.code }} — {{ account.name }}
             </option>
           </select>
         </label>

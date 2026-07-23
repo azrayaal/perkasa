@@ -30,9 +30,9 @@ export const WITHHOLDING_RATE: Record<WithholdingType, number> = {
 
 export const WITHHOLDING_LABEL: Record<WithholdingType, string> = {
   none: 'Tanpa potongan',
-  pph21: 'PPh 21 | Karyawan',
-  pph23: 'PPh 23 | Jasa (2%)',
-  'pph4-2': 'PPh Final 4(2) | Sewa (10%)',
+  pph21: 'PPh 21 \u2014 Karyawan',
+  pph23: 'PPh 23 \u2014 Jasa (2%)',
+  'pph4-2': 'PPh Final 4(2) \u2014 Sewa (10%)',
 }
 
 /** Kas yang benar-benar keluar: nilai beban + PPN, dikurangi PPh yang dipotong. */

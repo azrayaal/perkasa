@@ -31,6 +31,7 @@ import type {
   SalesInvoiceDetail,
   SalesRow,
 } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 /**
  * Sisa tagihan pelanggan.
@@ -65,8 +66,8 @@ function toRow(invoice: SalesInvoice): SalesRow {
 
   return {
     invoice,
-    customerName: database.customers.find((row) => row.id === invoice.customerId)?.name ?? '|',
-    warehouseName: database.warehouses.find((row) => row.id === invoice.warehouseId)?.name ?? '|',
+    customerName: database.customers.find((row) => row.id === invoice.customerId)?.name ?? EMPTY,
+    warehouseName: database.warehouses.find((row) => row.id === invoice.warehouseId)?.name ?? EMPTY,
     status,
     tradeInValue: invoice.tradeIn?.total ?? 0,
     outstanding: outstandingOf(invoice),

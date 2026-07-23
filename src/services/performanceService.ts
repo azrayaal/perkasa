@@ -113,6 +113,29 @@ function buildTopProducts(from: IsoDate, to: IsoDate): RankedItem[] {
     }
   }
 
+  /*
+   * Penjualan konter ikut dihitung. Kalau dilewatkan, "produk terlaris" akan
+   * bertentangan dengan pendapatan di Laba Rugi | yang memang sudah memuat
+   * omzet kasir | dan barang eceran yang laris keras terlihat seolah tidak ada.
+   */
+  for (const transaction of database.posTransactions) {
+    if (transaction.type !== 'sale') continue
+    if (transaction.date < from || transaction.date > to) continue
+
+    for (const line of transaction.lines) {
+      const product = productById.get(line.productId)
+      if (!product) continue
+
+      const current = entries.get(product.id) ?? {
+        label: product.name,
+        sublabel: product.sku,
+        value: 0,
+      }
+      current.value += lineAmount(line)
+      entries.set(product.id, current)
+    }
+  }
+
   return rank(entries)
 }
 
@@ -198,7 +221,7 @@ function buildRatios(from: IsoDate, to: IsoDate): FinancialRatio[] {
       format: 'ratio',
       benchmark: 1.5,
       direction: 'higher',
-      hint: 'Aset lancar dibagi kewajiban lancar | kemampuan bayar jangka pendek.',
+      hint: 'Aset lancar dibagi kewajiban lancar — kemampuan bayar jangka pendek.',
     },
     {
       key: 'debt-to-equity',

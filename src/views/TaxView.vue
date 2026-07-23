@@ -80,7 +80,7 @@ function openInvoice(id: string): void {
   <div class="flex flex-col gap-6">
     <PageHeader
       title="Perpajakan"
-      :description="`SPT Masa ${periodLabelLong(filingPeriod)}. Seluruh angka ditarik dari faktur dan beban | tidak ada input pajak terpisah.`"
+      :description="`SPT Masa ${periodLabelLong(filingPeriod)}. Seluruh angka ditarik dari faktur dan beban — tidak ada input pajak terpisah.`"
     />
 
     <LoadingState v-if="loading || !overview" :rows="5" />
@@ -294,7 +294,7 @@ function openInvoice(id: string): void {
 
       <IntegrationNote title="SPT bukan formulir terpisah">
         Seluruh angka di halaman ini ditarik dari <strong>faktur penjualan</strong>,
-        <strong>faktur pembelian</strong>, dan <strong>beban</strong> | tidak ada satu pun nilai pajak
+        <strong>faktur pembelian</strong>, dan <strong>beban</strong> — tidak ada satu pun nilai pajak
         yang diinput sendiri di sini. Konsekuensinya jujur: kalau ada faktur yang salah, SPT-nya ikut
         salah, dan memperbaikinya harus di dokumen sumbernya, bukan di laporan pajak.
       </IntegrationNote>

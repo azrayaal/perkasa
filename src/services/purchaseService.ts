@@ -25,6 +25,7 @@ import type {
   PurchaseInvoiceDetail,
   PurchaseRow,
 } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 function toRow(invoice: PurchaseInvoice): PurchaseRow {
   const database = db()
@@ -33,8 +34,8 @@ function toRow(invoice: PurchaseInvoice): PurchaseRow {
 
   return {
     invoice,
-    supplierName: database.suppliers.find((row) => row.id === invoice.supplierId)?.name ?? '|',
-    warehouseName: database.warehouses.find((row) => row.id === invoice.warehouseId)?.name ?? '|',
+    supplierName: database.suppliers.find((row) => row.id === invoice.supplierId)?.name ?? EMPTY,
+    warehouseName: database.warehouses.find((row) => row.id === invoice.warehouseId)?.name ?? EMPTY,
     status,
     outstanding: invoice.status === 'draft' ? 0 : invoice.totals.total - invoice.paidAmount,
     overdueDays: overdueDays(status, invoice.dueDate, todayIso),

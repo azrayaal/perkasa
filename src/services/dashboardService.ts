@@ -9,6 +9,7 @@ import { db } from '@/data/db'
 import { today } from '@/services/clock'
 import { respond } from '@/services/http'
 import { buildPositions } from '@/services/inventoryService'
+import { buildShiftSummary, posRevenueBetween } from '@/services/posService'
 import { balancesAsOf } from '@/services/ledgerService'
 import { buildJournal, entryAmount } from '@/services/postingService'
 import { buildIncomeStatement } from '@/services/reportService'
@@ -56,12 +57,15 @@ export function getDashboardStats(from: IsoDate, to: IsoDate): Promise<Dashboard
     vatPayable: (balances.get(ACC.vatOut) ?? 0) - (balances.get(ACC.vatIn) ?? 0),
     lowStockCount: positions.filter((position) => position.status !== 'in-stock').length,
     draftCount: salesRows.filter((row) => row.status === 'draft').length,
+    posRevenue: posRevenueBetween(from, to),
+    openShiftCount: db().posShifts.filter((shift) => shift.status === 'open').length,
   })
 }
 
 /** Route tujuan tiap jenis peristiwa | supaya linimasa bisa diklik. */
 const SOURCE_ROUTE: Record<JournalSource, string | null> = {
   opening: null,
+  pos: ROUTE.posHistory,
   sales: ROUTE.salesDetail,
   purchase: ROUTE.purchaseDetail,
   expense: ROUTE.expenses,
@@ -72,6 +76,7 @@ const SOURCE_ROUTE: Record<JournalSource, string | null> = {
 
 const SOURCE_TITLE: Record<JournalSource, string> = {
   opening: 'Saldo awal tahun buku',
+  pos: 'Transaksi kasir',
   sales: 'Faktur penjualan',
   purchase: 'Faktur pembelian',
   expense: 'Beban operasional',
@@ -161,6 +166,24 @@ export function getIntegrityChecks(asOf: IsoDate = today()): Promise<IntegrityCh
     .filter((invoice) => invoice.date <= asOf)
     .reduce((sum, invoice) => sum + invoice.totals.total - invoice.paidAmount, 0)
 
+  /*
+   * Uang yang seharusnya ada di laci menurut rekap shift. Shift yang sudah
+   * ditutup menyisakan hasil hitung fisik dikurangi setoran; shift yang masih
+   * buka memakai kas harapannya. Angka ini WAJIB sama dengan saldo akun 1130 |
+   * kalau meleset, ada transaksi kasir yang tidak terjurnal.
+   */
+  const cashInDrawer = database.posShifts
+    .filter((shift) => shift.date <= asOf)
+    .reduce((sum, shift) => {
+      const summary = buildShiftSummary(shift)
+      return (
+        sum +
+        (shift.status === 'closed'
+          ? (shift.countedCash ?? 0) - shift.depositedAmount
+          : summary.expectedCash)
+      )
+    }, 0)
+
   const checks: IntegrityCheck[] = [
     {
       key: 'inventory',
@@ -179,6 +202,15 @@ export function getIntegrityChecks(asOf: IsoDate = today()): Promise<IntegrityCh
       difference: receivableFromInvoices - (balances.get(ACC.receivable) ?? 0),
       moduleLabel: 'Faktur penjualan belum lunas',
       ledgerLabel: 'Akun 1200 di Neraca',
+    },
+    {
+      key: 'cash-register',
+      label: 'Kas laci kasir',
+      moduleValue: cashInDrawer,
+      ledgerValue: balances.get(ACC.cashRegister) ?? 0,
+      difference: cashInDrawer - (balances.get(ACC.cashRegister) ?? 0),
+      moduleLabel: 'Rekap shift kasir',
+      ledgerLabel: 'Akun 1130 di Neraca',
     },
     {
       key: 'payable',

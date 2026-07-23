@@ -28,6 +28,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { formatCurrency, formatCurrencyShort, formatNumber } from '@/utils/formatCurrency'
 import { formatDate } from '@/utils/formatDate'
 import type { StockCardRow, StockMoveType, StockPosition, WarehouseSummary, Warehouse } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 const period = usePeriodStore()
 const toast = useToastStore()
@@ -198,7 +199,7 @@ async function submitOpname(): Promise<void> {
     })
 
     opnameOpen.value = false
-    toast.push(`Opname ${created.number} tercatat | selisihnya langsung dijurnal.`)
+    toast.push(`Opname ${created.number} tercatat — selisihnya langsung dijurnal.`)
     await load()
   } catch (caught) {
     toast.push(caught instanceof Error ? caught.message : 'Gagal menyimpan opname.', 'error')
@@ -363,7 +364,7 @@ async function submitOpname(): Promise<void> {
 
             <template #cell-cover="{ row }">
               <span class="amount" :class="row.daysOfCover !== null && row.daysOfCover < 30 ? 'text-state-warning' : ''">
-                {{ row.daysOfCover === null ? '|' : `${row.daysOfCover} hari` }}
+                {{ row.daysOfCover === null ? EMPTY : `${row.daysOfCover} hari` }}
               </span>
             </template>
 
@@ -391,7 +392,7 @@ async function submitOpname(): Promise<void> {
                 class="w-full rounded-control border border-line bg-surface-alt px-3 py-2 text-data text-ink-primary outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
               >
                 <option v-for="position in positions" :key="position.product.id" :value="position.product.id">
-                  {{ position.product.sku }} | {{ position.product.name }}
+                  {{ position.product.sku }} — {{ position.product.name }}
                 </option>
               </select>
             </label>
@@ -459,7 +460,7 @@ async function submitOpname(): Promise<void> {
         <strong>pembelian</strong> (barang masuk), dan faktur <strong>penjualan</strong> yang sudah
         diposting (barang keluar). Karena sumbernya sama, nilai persediaan
         {{ formatCurrency(summary.value) }} selalu sama dengan saldo akun <strong>1300</strong> di
-        Neraca. Selisih hasil stock opname pun tidak bisa lolos diam-diam | sistem langsung
+        Neraca. Selisih hasil stock opname pun tidak bisa lolos diam-diam — sistem langsung
         membentuk jurnal ke akun <strong>5200 Selisih Persediaan</strong>.
       </IntegrationNote>
     </template>
@@ -483,7 +484,7 @@ async function submitOpname(): Promise<void> {
             class="w-full rounded-control border border-line bg-surface-alt px-3 py-2 text-data text-ink-primary outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
           >
             <option v-for="position in positions" :key="position.product.id" :value="position.product.id">
-              {{ position.product.sku }} | {{ position.product.name }}
+              {{ position.product.sku }} — {{ position.product.name }}
             </option>
           </select>
         </label>
@@ -498,7 +499,7 @@ async function submitOpname(): Promise<void> {
             class="w-full rounded-control border border-line bg-surface-alt px-3 py-2 text-data text-ink-primary outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
           >
             <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">
-              {{ warehouse.name }} | {{ warehouse.city }}
+              {{ warehouse.name }} — {{ warehouse.city }}
             </option>
           </select>
         </label>
@@ -521,7 +522,7 @@ async function submitOpname(): Promise<void> {
         <p class="rounded-control border border-line bg-surface-alt px-3 py-2 text-xs text-ink-secondary">
           Selisih ini otomatis dijurnal: akun <span class="identifier">5200</span> Selisih Persediaan
           berlawanan dengan <span class="identifier">1300</span> Persediaan. Susut menjadi debit di
-          5200, kelebihan menjadi kredit | tidak ada koreksi stok tanpa jejak akuntansi.
+          5200, kelebihan menjadi kredit — tidak ada koreksi stok tanpa jejak akuntansi.
         </p>
       </form>
 

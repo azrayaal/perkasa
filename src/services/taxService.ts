@@ -24,6 +24,7 @@ import type {
   WithholdingSummary,
   WithholdingType,
 } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 function filingStatus(payable: number): TaxFilingStatus {
   if (payable > 0) return 'kurang-bayar'
@@ -37,17 +38,26 @@ export function buildVatSummary(period: PeriodKey): VatPeriodSummary {
   const sales = database.salesInvoices.filter(
     (invoice) => invoice.status !== 'draft' && periodOf(invoice.date) === period,
   )
+  // Penjualan konter juga penyerahan kena pajak | kalau dilewatkan, SPT kurang
+  // lapor dan saldo PPN keluaran di neraca tidak akan cocok dengan SPT.
+  const posSales = database.posTransactions.filter(
+    (row) => row.type === 'sale' && periodOf(row.date) === period,
+  )
   const purchases = database.purchaseInvoices.filter((invoice) => periodOf(invoice.date) === period)
   const expenses = database.expenses.filter(
     (expense) => expense.ppn > 0 && periodOf(expense.date) === period,
   )
 
-  const outputBase = sales.reduce((sum, invoice) => sum + invoice.totals.dpp, 0)
-  const outputVat = sales.reduce((sum, invoice) => sum + invoice.totals.ppn, 0)
+  const outputBase =
+    sales.reduce((sum, invoice) => sum + invoice.totals.dpp, 0) +
+    posSales.reduce((sum, row) => sum + row.totals.dpp, 0)
+  const outputVat =
+    sales.reduce((sum, invoice) => sum + invoice.totals.ppn, 0) +
+    posSales.reduce((sum, row) => sum + row.totals.ppn, 0)
 
   // Barang bekas yang diterima lewat tukar tambah adalah PEROLEHAN: pelanggan
   // PKP menerbitkan faktur pajak, jadi PPN-nya menjadi kredit pajak perusahaan.
-  const tradeIns = sales.flatMap((invoice) => (invoice.tradeIn ? [invoice.tradeIn] : []))
+  const tradeIns = [...sales, ...posSales].flatMap((row) => (row.tradeIn ? [row.tradeIn] : []))
 
   const inputBase =
     purchases.reduce((sum, invoice) => sum + invoice.totals.dpp, 0) +
@@ -74,9 +84,9 @@ export function buildVatSummary(period: PeriodKey): VatPeriodSummary {
 }
 
 const WITHHOLDING_META: Array<{ type: Exclude<WithholdingType, 'none'>; label: string; rateLabel: string }> = [
-  { type: 'pph21', label: 'PPh Pasal 21 | Karyawan', rateLabel: 'Efektif 3,5%' },
-  { type: 'pph23', label: 'PPh Pasal 23 | Jasa', rateLabel: '2% dari bruto' },
-  { type: 'pph4-2', label: 'PPh Final Pasal 4(2) | Sewa', rateLabel: '10% final' },
+  { type: 'pph21', label: 'PPh Pasal 21 \u2014 Karyawan', rateLabel: 'Efektif 3,5%' },
+  { type: 'pph23', label: 'PPh Pasal 23 \u2014 Jasa', rateLabel: '2% dari bruto' },
+  { type: 'pph4-2', label: 'PPh Final Pasal 4(2) \u2014 Sewa', rateLabel: '10% final' },
 ]
 
 function buildWithholdings(from: string, to: string): WithholdingSummary[] {
@@ -130,7 +140,7 @@ export function getTaxOverview(period: PeriodKey): Promise<TaxOverview> {
       id: invoice.id,
       number: invoice.number,
       date: invoice.date,
-      customerName: customerName.get(invoice.customerId) ?? '|',
+      customerName: customerName.get(invoice.customerId) ?? EMPTY,
       ppn: invoice.totals.ppn,
     }))
 

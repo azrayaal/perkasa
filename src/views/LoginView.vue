@@ -23,7 +23,7 @@ const demoAccounts = getDemoAccounts()
 
 const HIGHLIGHTS = [
   'Penjualan, pembelian, dan gudang terhubung ke satu buku besar',
-  'Jurnal terbentuk otomatis dari dokumen | tidak ada posting manual',
+  'Jurnal terbentuk otomatis dari dokumen — tidak ada posting manual',
   'SPT Masa PPN & PPh tersusun langsung dari transaksi',
   'Neraca dan laporan keuangan selalu mengikuti transaksi terakhir',
 ]
@@ -87,7 +87,7 @@ function fillDemo(account: (typeof demoAccounts)[number]): void {
           <AppLogo :size="64" />
           <h1 class="mt-10 max-w-md text-4xl font-bold leading-tight text-white">Perkasa ERP</h1>
           <p class="mt-4 max-w-md text-lg text-white/80">
-            Sistem terpadu PT Perkasa Gemilang Distrindo | dari faktur di gudang sampai laporan keuangan,
+            Sistem terpadu PT Perkasa Gemilang Distrindo — dari faktur di gudang sampai laporan keuangan,
             semuanya satu sumber data.
           </p>
         </div>
@@ -160,7 +160,7 @@ function fillDemo(account: (typeof demoAccounts)[number]): void {
                 >
                   <span class="min-w-0">
                     <span class="block truncate text-sm font-semibold text-ink-primary">
-                      {{ ROLE_LABEL[account.user.role] }} | {{ account.user.name }}
+                      {{ ROLE_LABEL[account.user.role] }} — {{ account.user.name }}
                     </span>
                     <span class="block truncate text-xs text-ink-muted">
                       {{ account.email }} / {{ account.password }}

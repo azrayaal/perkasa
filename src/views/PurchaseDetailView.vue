@@ -20,6 +20,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { formatCurrency, formatNumber, formatPercent } from '@/utils/formatCurrency'
 import { formatDate } from '@/utils/formatDate'
 import type { Payment, PurchaseInvoiceDetail } from '@/types'
+import { EMPTY } from '@/utils/placeholder'
 
 const props = defineProps<{ id: string }>()
 
@@ -47,7 +48,7 @@ watch(() => props.id, load, { immediate: true })
 
 /** Nama produk untuk baris mutasi stok | ambil dari baris faktur yang sama. */
 function productNameOf(productId: string): string {
-  return detail.value?.lines.find((row) => row.product.id === productId)?.product.name ?? '|'
+  return detail.value?.lines.find((row) => row.product.id === productId)?.product.name ?? EMPTY
 }
 
 /* Pembayaran ke pemasok */
@@ -85,7 +86,7 @@ async function submitPayment(): Promise<void> {
     })
 
     paymentOpen.value = false
-    toast.push('Pembayaran dicatat | kas berkurang, utang usaha ikut turun.')
+    toast.push('Pembayaran dicatat — kas berkurang, utang usaha ikut turun.')
     await load()
   } catch (caught) {
     toast.push(caught instanceof Error ? caught.message : 'Gagal mencatat pembayaran.', 'error')
@@ -102,7 +103,7 @@ async function submitPayment(): Promise<void> {
     <template v-else-if="detail">
       <PageHeader
         :title="detail.invoice.number"
-        :description="`${detail.supplier?.name ?? '|'} · ${formatDate(detail.invoice.date)} · jatuh tempo ${formatDate(detail.invoice.dueDate)}`"
+        :description="`${detail.supplier?.name ?? EMPTY} · ${formatDate(detail.invoice.date)} · jatuh tempo ${formatDate(detail.invoice.dueDate)}`"
       >
         <template #actions>
           <BaseButton variant="ghost" icon="back" @click="router.push({ name: ROUTE.purchases })">
@@ -144,7 +145,7 @@ async function submitPayment(): Promise<void> {
                     </td>
                     <td class="amount px-4 py-3 text-right">{{ formatCurrency(row.line.unitPrice) }}</td>
                     <td class="amount px-4 py-3 text-right">
-                      {{ row.line.discountPercent > 0 ? formatPercent(row.line.discountPercent) : '|' }}
+                      {{ row.line.discountPercent > 0 ? formatPercent(row.line.discountPercent) : EMPTY }}
                     </td>
                     <td class="amount px-4 py-3 text-right font-semibold">{{ formatCurrency(row.amount) }}</td>
                   </tr>
@@ -179,7 +180,7 @@ async function submitPayment(): Promise<void> {
           <!-- Bukti integrasi paling gamblang: jurnal yang lahir dari dokumen ini. -->
           <BaseCard
             title="Jurnal Otomatis"
-            subtitle="Dibentuk sistem dari faktur ini | tidak diketik manual"
+            subtitle="Dibentuk sistem dari faktur ini — tidak diketik manual"
           >
             <EmptyState
               v-if="detail.journal.length === 0"
@@ -222,7 +223,7 @@ async function submitPayment(): Promise<void> {
               </div>
               <div class="flex items-center justify-between gap-3">
                 <dt class="text-ink-secondary">Gudang penerima</dt>
-                <dd class="text-ink-primary">{{ detail.warehouse?.name ?? '|' }}</dd>
+                <dd class="text-ink-primary">{{ detail.warehouse?.name ?? EMPTY }}</dd>
               </div>
             </dl>
           </BaseCard>
@@ -278,7 +279,7 @@ async function submitPayment(): Promise<void> {
       </div>
 
       <IntegrationNote title="Jejak dokumen ini di seluruh sistem">
-        Gudang {{ detail.warehouse?.name ?? '|' }} menerima barang senilai
+        Gudang {{ detail.warehouse?.name ?? EMPTY }} menerima barang senilai
         {{ formatCurrency(detail.invoice.totals.dpp) }} yang menambah akun 1300 Persediaan | nilai
         itulah yang kelak keluar sebagai harga pokok saat barangnya terjual. Utang ke
         {{ detail.supplier?.name ?? 'pemasok' }} sebesar
@@ -311,7 +312,7 @@ async function submitPayment(): Promise<void> {
             class="w-full rounded-control border border-line bg-surface-alt px-3 py-2 text-data text-ink-primary outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
           >
             <option v-for="account in CASH_ACCOUNTS" :key="account.code" :value="account.code">
-              {{ account.code }} | {{ account.name }}
+              {{ account.code }} — {{ account.name }}
             </option>
           </select>
         </label>

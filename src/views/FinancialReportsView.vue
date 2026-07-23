@@ -67,7 +67,7 @@ const cashFlowSections = computed<Array<{ section: ReportSection; totalLabel: st
   <div class="flex flex-col gap-6">
     <PageHeader
       title="Laporan Keuangan"
-      :description="`Laba rugi, arus kas, dan perubahan ekuitas periode ${period.label} | ketiganya membaca buku besar yang sama.`"
+      :description="`Laba rugi, arus kas, dan perubahan ekuitas periode ${period.label} — ketiganya membaca buku besar yang sama.`"
     />
 
     <LoadingState v-if="loading" :rows="6" />
@@ -200,7 +200,7 @@ const cashFlowSections = computed<Array<{ section: ReportSection; totalLabel: st
           <BaseCallout tone="note" title="Sama dengan Kas & Bank di Neraca">
             Saldo kas akhir {{ formatCurrency(statements.cashFlow.closingCash) }} adalah angka yang
             sama dengan pos Kas &amp; Bank pada Neraca per {{ formatDate(period.to) }}. Arus kas di
-            sini bukan rekap terpisah | tiap barisnya adalah lawan jurnal dari setiap mutasi kas.
+            sini bukan rekap terpisah — tiap barisnya adalah lawan jurnal dari setiap mutasi kas.
           </BaseCallout>
         </div>
 
